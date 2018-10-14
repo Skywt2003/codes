@@ -2,4 +2,6 @@
 
 Here are my codes. For XJOI/Vjudge/CodeForces/Topcoder/Nowcoder...
 
-My blog: [skywt.cn](https://skywt.cn/)
+Don't _he_ my code anyway!!!
+
+[skywt.cn](https://skywt.cn/)

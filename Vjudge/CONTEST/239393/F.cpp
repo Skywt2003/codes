@@ -49,8 +49,9 @@ namespace DP{
 		if ((n&1)&&(m&1)) return;
 		f[1][0]=1;
 		for (int i=0;i<n;i++){
-			for (int j=0;j<s;j++){
-				for (int k=0;k<n;k++){
+			for (int j=0;j<m;j++){
+				memset_clear(f[i&1]);
+				for (int k=0;k<s;k++){
 					
 				}
 			}
