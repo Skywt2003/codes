@@ -48,8 +48,10 @@ namespace DP{
 	void make_answer(){
 		if ((n&1)&&(m&1)) return;
 		f[1][0]=1;
+		int cur=0;
 		for (int i=0;i<n;i++){
 			for (int j=0;j<m;j++){
+				cur^=1;
 				memset_clear(f[i&1]);
 				for (int k=0;k<s;k++){
 					
