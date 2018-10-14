@@ -1,6 +1,6 @@
 /*
  * XJOI CONTEST 1015
- * T3 - 初等数论
+ * T3 - 初等数论 (unac)
  * 181008 By SkyWT
  */
 
