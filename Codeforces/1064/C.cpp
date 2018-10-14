@@ -1,3 +1,9 @@
+/*
+ * Codeforces Round #516
+ * C - Oh Those Palindromes
+ * 181014 By SkyWT
+ */
+
 #include<cstdio>
 #include<iostream>
 #include<cstring>
@@ -29,16 +35,14 @@ int read(){
 	return ret*f;
 }
 
+const int maxn=100005;
+int n;
+char s[maxn];
+
 signed main(){
-	int t=read();
-	while (t--){
-		int x=read();
-		int ans=1;
-		while (x>=1){
-			if (x&1) ans=ans*2;
-			x>>=1;
-		}
-		printf("%lld\n",ans);
-	}
+	n=read();
+	scanf("%s",s+1);
+	sort(s+1,s+1+n);
+	printf("%s\n",s+1);
 	return 0;
 }

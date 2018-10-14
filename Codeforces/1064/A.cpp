@@ -1,3 +1,9 @@
+/*
+ * Codeforces Round #516
+ * A - Make a triangle!
+ * 181014 By SkyWT
+ */
+
 #include<cstdio>
 #include<iostream>
 #include<cstring>
