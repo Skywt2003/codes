@@ -1,0 +1,123 @@
+
+<!-- saved from url=(0046)http://acm.hdu.edu.cn/showproblem.php?pid=1423 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=GBK"><meta name="keywords" content="HDOJ ACM ICPC OJ C C++ Pascal Java"><link rel="stylesheet" type="text/css" href="./Problem - 1423_files/global.css" media="all"><link rel="stylesheet" type="text/css" href="./Problem - 1423_files/diyinhead.css" media="all"><link rel="stylesheet" type="text/css" href="./Problem - 1423_files/webinhead.css" media="all"><script src="./Problem - 1423_files/global.js.下载" type="text/javascript"></script><script src="./Problem - 1423_files/register.js.下载" type="text/javascript"></script><script src="./Problem - 1423_files/MathJax.js.下载" type="text/javascript"></script><title>Problem - 1423</title><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Hover_Arrow {position: absolute; width: 15px; height: 11px; cursor: pointer}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; color: #666666}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_Menu_Close {position: absolute; width: 31px; height: 31px; top: -15px; left: -15px}
+</style></head><body><div id="MathJax_Message" style="display: none;"></div>
+<a name="top"></a>
+<table align="center" cellspacing="0" cellpadding="0" width="980" border="0" style="word-wrap:break-word">
+<tbody><tr>
+	<td style="border:#1A5CC8 1px solid" align="center" width="100%">
+		<a href="http://acm.hdu.edu.cn/">
+			<img src="./Problem - 1423_files/banner.jpg" width="100%" height="116" border="0">
+		</a>
+	</td>
+</tr>
+<tr>
+	<td style="border:#1A5CC8 1px solid">
+	<table cellspacing="0" cellpadding="1" width="979px">
+	<tbody><tr bgcolor="#1A5CC8" align="center" class="banner" height="25">
+		<td>Online Judge</td>
+		<td>Online Exercise</td>
+		<td>Online Teaching</td>
+		<td>Online Contests</td>
+	<td>Exercise Author</td>
+	</tr>
+	<tr style="font-size:16px" align="center">
+		<td width="20%" valign="top">
+		<a href="http://acm.hdu.edu.cn/faq.php" style="text-decoration: none">F.A.Q</a><br>
+		<a href="http://acm.hdu.edu.cn/friends" style="text-decoration: none">Hand In Hand</a><br>
+		<a href="http://acm.hdu.edu.cn/onlineuser.php" style="text-decoration: none">Online Acmers</a>	<br>
+		<!-- /onlineuser.php-->
+		
+		<a href="http://acm.hdu.edu.cn/forum" style="text-decoration: none">Forum | </a><a href="http://acm.hdu.edu.cn/discuss/public/list.php" style="text-decoration: none">Discuss</a><br>
+		<a href="http://acm.hdu.edu.cn/statistic/submit_graph.php" style="text-decoration: none">Statistical Charts</a><br>
+		</td>
+		<td width="20%" valign="top">
+		<form action="http://acm.hdu.edu.cn/search.php" method="get">
+		<a href="http://acm.hdu.edu.cn/listproblem.php?vol=1" style="text-decoration: none">Problem Archive</a><br>
+		<!--<a href="http://feeds.feedburner.com/Hdoj-problemset"><img src="/images/rss1.jpg" alt="problemset" style="vertical-align:text-bottom;"width=20 height=20></a><br>-->
+		<!--
+			 <a href="/submit.php">Submit Solution</a><br>
+		-->	
+		<a href="http://acm.hdu.edu.cn/status.php" style="text-decoration: none">Realtime Judge Status</a><br>
+
+		<a href="http://acm.hdu.edu.cn/ranklist.php" style="text-decoration: none">Authors Ranklist</a><br>
+		<input name="field" value="author" type="hidden"><input class="text60" name="key">&nbsp;<input class="button40" type="submit" value="Search">
+		
+		<!--
+			<input name=field value=problem type=hidden><input class=text60 name=key>&nbsp;<input class=button40 type=submit value=Search>
+		-->
+		</form>
+		</td>
+		<td width="20%" valign="top">
+		 <form action="http://acm.hdu.edu.cn/search.php" method="get"> 
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a style="text-decoration: none" href="http://code.hdu.edu.cn/">C/C++/Java Exams &nbsp;&nbsp;&nbsp;&nbsp;</a><br>
+		<a style="text-decoration: none" href="http://acm.hdu.edu.cn/game">ACM Steps</a><br>
+		<a href="http://acm.hdu.edu.cn/ITJobs/">Go to Job</a><br>	
+		<a href="http://acm.hdu.edu.cn/livecast" style="text-decoration: none">Contest LiveCast</a><br>
+		<a style="text-decoration: none" href="http://acm.hdu.edu.cn/region">ICPC@China</a><br>
+		<!-- <a href="/register.php">Register New Author</a><br> -->
+		<!-- <a href="/modifyuser.php">Update Your Information</a><br> -->
+		</form>
+		</td>
+		<td width="20%" valign="top">
+		<a href="http://bestcoder.hdu.edu.cn/" style="text-decoration: none; color: red; font-weight: bold;">Best Coder <sup style="color: gray;">beta</sup></a><br><a href="http://acm.hdu.edu.cn/vip/contest_list.php" style="text-decoration: none">VIP</a> | <a href="http://acm.hdu.edu.cn/contests/contest_list.php" style="text-decoration: none">STD Contests</a><br><a href="http://code.hdu.edu.cn/vcontest" style="text-decoration: none">Virtual Contests </a><br>&nbsp;&nbsp;<a href="http://acm.hdu.edu.cn/diy/contest_list.php" style="text-decoration: none">&nbsp;&nbsp;DIY | </a><a href="http://acm.hdu.edu.cn/webcontest" style="text-decoration: none"><font color="">Web-DIY</font> <font size="1" color="gray"><sup>beta</sup></font></a><br><a style="text-decoration: none" href="http://acm.hdu.edu.cn/recentcontest">Recent Contests</a><br>		</td>
+		<td width="20%">
+		<div align="left" style="font-size:16px;width:150px"><a href="http://acm.hdu.edu.cn/userstatus.php?user=Skywt2003" style="text-decoration: none"><img alt="Author" src="./Problem - 1423_files/user.png" border="0" height="18" width="18"> Sky</a><br><b style="font-family:Arial;font-size:16px"><a href="http://acm.hdu.edu.cn/listmsg.php" style="text-decoration: none"><img alt="Mail" src="./Problem - 1423_files/mail.png" border="0" height="18" width="18"> Mail 0</a><a href="http://acm.hdu.edu.cn/listmsg.php?type=new" style="text-decoration: none">(<font color="red">0</font>)</a></b><br><a href="http://acm.hdu.edu.cn/control_panel.php" style="text-decoration: none"><img src="./Problem - 1423_files/panel.jpg" alt="Control Panel" border="0" height="18" width="18"> Control Panel </a><br><a href="http://acm.hdu.edu.cn/userloginex.php?action=logout" style="text-decoration: none"><img src="./Problem - 1423_files/signout.png" alt="Sign Out" border="0" height="18" width="18"> Sign Out</a></div>		</td>
+	</tr>
+	</tbody></table>
+	</td>
+</tr>
+<tr>
+	<td>
+		<div align="center" id="rollword"><marquee scrollamount="2" width="600" scrolldelay="30" onmouseover="javascript:this.stop();" onmouseout="javascript:this.start();"><b style="margin-right:20px"><br><a style="color:red">第五次入围！——我校晋级第42届ACM国际大学生程序设计竞赛全球总决赛</a><br></b></marquee></div>	</td>
+</tr>
+<tr><td align="center"><h1 style="color:#1A5CC8">Greatest Common Increasing Subsequence</h1><font><b><span style="font-family:Arial;font-size:12px;font-weight:bold;color:green">Time Limit: 2000/1000 MS (Java/Others)&nbsp;&nbsp;&nbsp;&nbsp;Memory Limit: 65536/32768 K (Java/Others)<br>Total Submission(s): 8696&nbsp;&nbsp;&nbsp;&nbsp;Accepted Submission(s): 2810<br></span></b></font><br><br><div class="panel_title" align="left">Problem Description</div> <div class="panel_content">This is a problem from ZOJ 2432.To make it easyer,you just need output the length of the subsequence.</div><div class="panel_bottom">&nbsp;</div><br><div class="panel_title" align="left">Input</div> <div class="panel_content">Each sequence is described with M - its length (1 &lt;= M &lt;= 500) and M integer numbers Ai (-2^31 &lt;= Ai &lt; 2^31) - the sequence itself. </div><div class="panel_bottom">&nbsp;</div><br><div class="panel_title" align="left">Output</div> <div class="panel_content">output print L - the length of the greatest common increasing subsequence of both sequences. </div><div class="panel_bottom">&nbsp;</div><br><div class="panel_title" align="left">Sample Input</div><div class="panel_content"><pre><div style="font-family:Courier New,Courier,monospace;">1
+
+5
+1 4 2 5 -12
+4
+-12 1 2 4</div></pre></div><div class="panel_bottom">&nbsp;</div><br><div class="panel_title" align="left">Sample Output</div><div class="panel_content"><pre><div style="font-family:Courier New,Courier,monospace;">2</div></pre></div><div class="panel_bottom">&nbsp;</div><br><div class="panel_title" align="left">Source</div> <div class="panel_content"> <a href="http://acm.hdu.edu.cn/search.php?field=problem&amp;key=+ACM%CA%EE%C6%DA%BC%AF%D1%B5%B6%D3%C1%B7%CF%B0%C8%FC%A3%A8%B6%FE%A3%A9&amp;source=1&amp;searchmode=source">  ACM暑期集训队练习赛（二） </a> </div> <div class="panel_bottom">&nbsp;</div><br><div class="panel_title" align="left">Recommend</div> <div class="panel_content">lcy&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;We have carefully selected several similar problems for you:&nbsp;&nbsp;<a href="http://acm.hdu.edu.cn/showproblem.php?pid=1422" target="_blank">1422</a>&nbsp;<a href="http://acm.hdu.edu.cn/showproblem.php?pid=1421" target="_blank">1421</a>&nbsp;<a href="http://acm.hdu.edu.cn/showproblem.php?pid=1400" target="_blank">1400</a>&nbsp;<a href="http://acm.hdu.edu.cn/showproblem.php?pid=1418" target="_blank">1418</a>&nbsp;<a href="http://acm.hdu.edu.cn/showproblem.php?pid=1424" target="_blank">1424</a>&nbsp;</div><div class="panel_bottom">&nbsp;</div><br><center style="font-size:15px;font-family:Arial;font-weight:bold;color:#1A5CC8"><a href="http://acm.hdu.edu.cn/statistic.php?pid=1423">Statistic</a>&nbsp;|&nbsp;<a href="http://acm.hdu.edu.cn/submit.php?pid=1423">Submit</a>&nbsp;|&nbsp;<a href="http://acm.hdu.edu.cn/discuss/problem/list.php?problemid=1423">Discuss</a> | <a href="http://acm.hdu.edu.cn/note/note.php?pid=1423">Note</a><br></center></td></tr><tr>
+<td>
+	<table style="border:#1A5CC8 1px solid; font-size:14px" cellspacing="0" cellpadding="1" width="100%">
+	<tbody><tr align="center">
+		<td class="footer_link" height="45"><a href="http://acm.hdu.edu.cn/">Home</a> | <a href="http://acm.hdu.edu.cn/showproblem.php?pid=1423#top">Top</a></td>
+		<td style="padding:6px">
+			Hangzhou Dianzi University Online Judge 3.0<br>
+			Copyright &#169; 2005-2018 <a href="mailto:acm@hdu.edu.cn">HDU ACM Team</a>. All Rights Reserved.<br>
+			<a href="http://acm.hdu.edu.cn/about_us/developer.php">Designer &amp; Developer </a>: <a>Wang Rongtao</a>&nbsp;<a>LinLe</a>&nbsp;<a href="mailto:gjavac@gmail.com">GaoJie</a>&nbsp;<a href="mailto:gl8997@gmail.com">GanLu</a><br>
+			<span class="pagerunstatus">Total 0.000000(s) query 5, Server time : 2018-02-20 11:39:25, Gzip enabled</span>		</td>
+		<td class="footer_link">
+			<!-- <a href="javascript:history.go(-1);">Back</a> | <a href="javascript:history.forward();">Forward</a>-->
+			<a href="http://acm.hdu.edu.cn/admin">Administration</a>	
+		</td>
+	</tr>
+	</tbody></table>
+</td>
+</tr>
+</tbody></table>
+
+</body></html>

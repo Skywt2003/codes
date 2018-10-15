@@ -1,0 +1,131 @@
+
+#content{
+	height:auto!important;
+	height:120px;
+	min-height:120px; 
+	font-size:16px;
+	margin:0 auto 20px auto;
+	width:100%;
+	
+}
+#maintable{
+	text-align:center;
+	font-size:14px;
+	width:100%;
+	margin:10px auto;
+	
+}
+#maintable tr{
+	height:19px;
+}
+.tbheader{
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+	height:16px;
+	background-color:#1a5cc8;
+	color:white;
+}
+.tbheader a{
+	color:white;
+}
+ .contype{
+	font-size:14px;
+	margin:10px auto;
+	text-align:center;
+}
+.ctpublic{
+	color:red;
+}
+.ctprivate{
+	color:green;
+}
+.cspend{
+	color:green;
+}
+.csend{
+	color:gray;
+}
+.csrun{
+	color:red;
+}
+#content h4{
+	font-weight:normal;
+	margin:3px auto 0;
+	text-align:center;
+	color:#1a5cc8;
+	font-size:14px;
+}
+#content h2{
+	margin:5px auto;
+	text-align:center;
+	font-size:18px;
+}
+#content #errormsg{
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:13px;
+	font-weight:bold;
+	width:100%;
+	color:red;
+	text-align:center;
+	margin:5px auto;
+	padding:0;
+}
+
+/*WEB Contest 的相关表单*/
+#content #mkcon{
+	width:68%;
+	margin:20px auto 0 200px;
+
+}
+#content #mkcon p{
+	margin:10px auto;
+}
+#content #mkcon .timeinfo input{
+	width:40px;
+}
+#content #mkcon .timeinfo span{
+	border:#b7cbff 1px dashed;
+}
+#content #mkcon #webconname{
+	width:414px;
+	margin-left:11px;
+}
+#content #mkcon #webyear{
+	margin-left:36px;
+}
+#content #mkcon #weblday{
+	margin-left:21px;
+}
+#content #contesttype{
+	margin-left:16px;
+	border:none;
+}
+#content #contesttype2{
+	margin-left:16px;
+	border:none;
+}
+
+#content #mkcon #password{
+	margin-left:33px;
+	width:152px;
+}
+#content #mkpro{
+	width:50%;
+	margin:20px auto 20px 310px;
+}
+#content #mkpro h1{
+	font-size:16px;
+}
+#content #mkpro p{
+	text-align:center;
+}
+#content #mkpro #webspid{
+	margin-left:0px;
+	width:80px;
+}
+
+#content #mknotice{
+	margin:auto;
+	width:100%;
+	height:100px;
+}

@@ -30,10 +30,11 @@ inline void add(int x,int y,int z){
 }
 
 namespace graph{
-	bool vis[maxn],fa[maxn],all_loop=0;
+	bool vis[maxn],fa[maxn];
+	vector <int> loop;
 
 	inline void find_loop(){
-		memset(vis,0,sizeof(vis));
+		memset(vis,0,sizeof(vis));loop.clear();
 		queue <int> que;
 		while (!que.empty()) que.pop();
 		que.push(1);fa[1]=-1;vis[1]=true;
@@ -42,7 +43,7 @@ namespace graph{
 			vis[head]=false;
 			for (int i=lnk[head];i;i=nxt[i]) if (son[i]!=fa[head]){
 				if (vis[son[i]]){
-					while (!que.empty()) in_loop[que.front()]=true,all_loop++,que.pop();
+					while (!que.empty()) in_loop[que.front()]=true,loop.push_back(que.front()),que.pop();
 					return;
 				}
 				fa[son[i]]=head;
@@ -51,29 +52,25 @@ namespace graph{
 		}
 	}
 
-	int head=0,tail=0;
-	int que[maxn];
-	int dst[maxn];
+	inline void make_loop_dist(int s){
 
+	}
+
+	int que[maxn*2];
+	int head=0,tail=0;
 	inline int make_answer(){
 		int ret=0;
-		int s=-1;
-		for (int i=1;i<=n;i++) if (in_loop[i]) {s=i;break;}
-		if (s==-1){
+		if (loop.size()==0){
 			for (int i=1;i<=n;i++) ret=max(ret,max_length[i]);
 			return ret;
 		}
 		make_loop_dist(s);
-		int lst=-1,now=s;
-		dst[s]=0;
-		do{
-			for (int i=lnk[now];i;i=nxt[i]) if (in_loop[son[i]] && son[i]!=lst){
-				lst=now;now=son[i];
-				dst[now]=dst[lst]+w[i];
-				break;
-			}
-		} while(now!=s);
-		
+		for (int i=0;i<loop_cnt;i++) loop.push_back(loop[i]); // 复制一遍环，搞成两倍，方便处理
+
+		que[++tail]=loop[0];
+		for (int i=1;i<loop.size();i++){
+			
+		}
 	}
 }
 
