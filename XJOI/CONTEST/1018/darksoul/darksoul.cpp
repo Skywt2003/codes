@@ -1,3 +1,5 @@
+// F**KING UNAC!!!!!!
+
 #include<cstdio>
 #include<cstring>
 #include<iostream>
@@ -8,6 +10,8 @@
 using namespace std;
 
 #define int long long
+
+#define write(_) cout<<#_<<" = "<<_<<endl
 
 const int maxn=1000005,maxe=2000005;
 int n,ans=0;
@@ -30,47 +34,66 @@ inline void add(int x,int y,int z){
 }
 
 namespace graph{
-	bool vis[maxn],fa[maxn];
-	vector <int> loop;
+	bool vis[maxn];
+	int loop[maxn*2],loop_cnt=0,loop_length=0;
+	int dst[maxn*2];
+	bool flg=false; // 是否找到了环
 
-	inline void find_loop(){
-		memset(vis,0,sizeof(vis));loop.clear();
-		queue <int> que;
-		while (!que.empty()) que.pop();
-		que.push(1);fa[1]=-1;vis[1]=true;
-		while (!que.empty()){
-			int head=que.front();que.pop();
-			vis[head]=false;
-			for (int i=lnk[head];i;i=nxt[i]) if (son[i]!=fa[head]){
-				if (vis[son[i]]){
-					while (!que.empty()) in_loop[que.front()]=true,loop.push_back(que.front()),que.pop();
-					return;
-				}
-				fa[son[i]]=head;
-				vis[son[i]]=true;que.push(son[i]);
-			}
+	inline void DFS(int x,int fa){
+		if (vis[x]) return;
+		vis[x]=true;
+		if (flg) return;
+		for (int i=lnk[x];i;i=nxt[i]) if (son[i]!=fa){
+			if (flg) return;
+			loop_cnt++;
+			loop[loop_cnt]=son[i];dst[loop_cnt]=dst[loop_cnt-1]+w[i];
+			if (vis[son[i]]) {flg=true;return;}
+			DFS(son[i],x);
+			if (flg) return;
+			loop_cnt--;
 		}
+		vis[x]=false;
 	}
 
-	inline void make_loop_dist(int s){
-
+	inline void find_loop(){
+		memset(vis,0,sizeof(vis));
+		for (int i=1;i<=n;i++) if (!flg) loop_cnt=0,DFS(i,-1); else break;
+		int delta=dst[loop_cnt]-dst[loop_cnt-1];
+		loop_cnt--;
+		// for (int i=1;i<=loop_cnt;i++) printf("%lld ",loop[i]);printf("\n");
+		// for (int i=1;i<=loop_cnt;i++) printf("%lld ",dst[i]); printf("\n");
+		in_loop[loop[1]]=true;
+		for (int i=2;i<=loop_cnt;i++) in_loop[loop[i]]=true,dst[i]-=dst[1];dst[1]=0;
+		// write(loop_cnt);
+		// write(flg);
+		loop_length=dst[loop_cnt]+delta;
+		int tmp=loop_cnt;
+		for (int i=1;i<=tmp;i++){
+			loop_cnt++;
+			loop[loop_cnt]=loop[i];
+			dst[loop_cnt]=dst[i]+loop_length;
+		}
 	}
 
 	int que[maxn*2];
 	int head=0,tail=0;
 	inline int make_answer(){
 		int ret=0;
-		if (loop.size()==0){
+		if (loop_cnt<=0){
 			for (int i=1;i<=n;i++) ret=max(ret,max_length[i]);
 			return ret;
 		}
-		make_loop_dist(s);
-		for (int i=0;i<loop_cnt;i++) loop.push_back(loop[i]); // 复制一遍环，搞成两倍，方便处理
 
-		que[++tail]=loop[0];
-		for (int i=1;i<loop.size();i++){
-			
+		// write(loop_length);
+		head=tail=0;
+		que[++tail]=loop[1];
+		for (int i=2;i<=loop_cnt;i++){
+			while (head+1<=tail && dst[i]-dst[head] > (loop_length)/2) head++;
+			while (head+1<=tail && max_length[que[head]]-dst[head] < max_length[que[head+1]]-dst[head+1]) head++;
+			ret=max(ret,max_length[que[head]]+max_length[loop[i]] + dst[i]-dst[head]);
+			que[++tail]=loop[i];
 		}
+		return ret;
 	}
 }
 
@@ -83,32 +106,27 @@ namespace tree{
 
 	inline pair<int,int> DFS(int x,int fa){
 		pair<int,int> ret;
-		ret=make_pair(-1,0);
+		ret=make_pair(x,0);
 		for (int i=lnk[x];i;i=nxt[i]) if (son[i]!=fa && in_loop[son[i]]==false){
-			pair<int,int> now=DFS(son[i]);
+			pair<int,int> now=DFS(son[i],x);
 			now.second+=w[i];
 			if (now.second+w[i]>ret.second) ret=now;
 		}
 		return ret;
 	}
 
-	inline int find_max(int s){ // IT'S NO USE!!!
-		init();
-		pair<int,int> p1=DFS(s,-1);
-		init();
-		pair<int,int> p2=DFS(p1.first,-1);
-		return p2.second;
-	}
-
 	inline int find_max_length(int x){
+		in_loop[x]=false;
 		pair<int,int> p=DFS(x,-1);
-		return p.second;
+		pair<int,int> p2=DFS(p.first,-1);
+		in_loop[x]=true;
+		return p2.second;
 	}
 }
 
 signed main(){
 	freopen("darksoul.in","r",stdin);
-	freopen("darksoul.out","w",stdout);
+	// freopen("darksoul.out","w",stdout);
 	n=read();
 	for (int i=1;i<=n;i++){
 		int x=read(),y=read(),z=read();
