@@ -58,8 +58,8 @@ namespace graph{
 	inline void find_loop(){
 		memset(vis,0,sizeof(vis));
 		for (int i=1;i<=n;i++) if (!flg) loop_cnt=0,DFS(i,-1); else break;
-		int delta=dst[loop_cnt]-dst[loop_cnt-1];
-		loop_cnt--;
+		int delta=dst[1];
+		// loop_cnt--;
 		// for (int i=1;i<=loop_cnt;i++) printf("%lld ",loop[i]);printf("\n");
 		// for (int i=1;i<=loop_cnt;i++) printf("%lld ",dst[i]); printf("\n");
 		in_loop[loop[1]]=true;
@@ -136,6 +136,7 @@ signed main(){
 	graph::find_loop();
 	for (int i=1;i<=n;i++)
 		if (in_loop[i]) max_length[i]=tree::find_max_length(i);
+	// for (int i=1;i<=n;i++) if (in_loop[i]) printf("max_length[%lld]=%lld\n",i,max_length[i]);
 	ans=max(ans,graph::make_answer());
 	printf("%lld\n",ans);
 	return 0;
