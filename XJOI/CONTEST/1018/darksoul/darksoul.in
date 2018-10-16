@@ -1,16 +1,49 @@
-15
-3 1 7
-12 13 12
-9 11 1
-5 6 6
-8 7 2
-2 3 10
-5 4 3
-9 10 5
-6 7 5
-14 15 1
-4 12 8
-2 7 7
-3 4 8
-12 14 9
-5 9 4
+5
+1 2 2
+2 3 2
+3 4 2
+1 4 1
+4 5 4
+
+		.myquote {
+			text-align: center;
+			background: #f5f5f5;
+			padding: 30px 80px;
+			position: relative;
+			margin: 0;
+			border: none;
+		}
+		.myquote::before, .myquote::after {
+			color: #000;
+			position: absolute;
+			content: "\201c";
+			font-size: 45px;
+			font-family: 'Georgia', serif;
+			display: block;
+			top: 13px;
+			left: 30px;
+		}
+		.myquote::after {
+			content: "\201d";
+			top: auto;
+			left: auto;
+			right: 30px;
+			bottom: -5px;
+		}
+		.myquote cite {
+			position: relative;
+			display: inline-block;
+			padding: 0 20px;
+			font-size: 14px;
+			margin-top: 20px;
+		}
+		.myquote cite::before {
+			content: "";
+			background-color: #363b40;
+			width: 10px;
+			height: 1px;
+			display: block;
+			position: absolute;
+			top: 10px;
+			left: 0;
+		}

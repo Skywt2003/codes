@@ -1,5 +1,3 @@
-// F**KING UNAC!!!!!!
-
 #include<cstdio>
 #include<cstring>
 #include<iostream>
@@ -34,44 +32,43 @@ inline void add(int x,int y,int z){
 }
 
 namespace graph{
-	bool vis[maxn];
+	int vis[maxn],fa[maxn],dstfa[maxn],cnt=0;
 	int loop[maxn*2],loop_cnt=0,loop_length=0;
 	int dst[maxn*2];
-	bool flg=false; // 是否找到了环
 
-	inline void DFS(int x,int fa){
-		if (vis[x]) return;
-		vis[x]=true;
-		if (flg) return;
-		for (int i=lnk[x];i;i=nxt[i]) if (son[i]!=fa){
-			if (flg) return;
-			loop_cnt++;
-			loop[loop_cnt]=son[i];dst[loop_cnt]=dst[loop_cnt-1]+w[i];
-			if (vis[son[i]]) {flg=true;return;}
-			DFS(son[i],x);
-			if (flg) return;
-			loop_cnt--;
+	inline void get_loop(int x){
+		vis[x]=++cnt;
+		for (int i=lnk[x];i;i=nxt[i]) if (son[i]!=fa[x]){
+			if (vis[son[i]]){
+				if (vis[son[i]]<vis[x]) continue;
+				int now=son[i];dstfa[x]=w[i];
+				for (;;){
+					loop[++loop_cnt]=now;
+					dst[loop_cnt+1]=dst[loop_cnt]+dstfa[now];
+					if (now==x) break;
+					now=fa[now];
+				}
+			} else fa[son[i]]=x,dstfa[son[i]]=w[i],get_loop(son[i]);
 		}
-		vis[x]=false;
 	}
 
+/*
+ * 非常麻烦的找环的函数 via http://www.cnblogs.com/widsom/p/9492725.html
+ * need to build: loop[] loop_cnt loop_length in_loop[] dst[]
+ */
 	inline void find_loop(){
 		memset(vis,0,sizeof(vis));
-		for (int i=1;i<=n;i++) if (!flg) loop_cnt=0,DFS(i,-1); else break;
-		int delta=dst[1];
-		// loop_cnt--;
-		// for (int i=1;i<=loop_cnt;i++) printf("%lld ",loop[i]);printf("\n");
-		// for (int i=1;i<=loop_cnt;i++) printf("%lld ",dst[i]); printf("\n");
-		in_loop[loop[1]]=true;
-		for (int i=2;i<=loop_cnt;i++) in_loop[loop[i]]=true,dst[i]-=dst[1];dst[1]=0;
-		// write(loop_cnt);
-		// write(flg);
-		loop_length=dst[loop_cnt]+delta;
-		int tmp=loop_cnt;
+		cnt=0;loop_cnt=0;
+		get_loop(1);
+		loop_length=dst[loop_cnt+1];
+
+		memset(in_loop,0,sizeof(in_loop));
+		for (int i=1;i<=loop_cnt;i++) in_loop[loop[i]]=true;
+
+		int tmp=loop_cnt; // 拓展倍长
 		for (int i=1;i<=tmp;i++){
-			loop_cnt++;
-			loop[loop_cnt]=loop[i];
-			dst[loop_cnt]=dst[i]+loop_length;
+			loop[++loop_cnt]=loop[i];
+			dst[loop_cnt+1]=dst[i+1]+loop_length;
 		}
 	}
 
@@ -84,14 +81,22 @@ namespace graph{
 			return ret;
 		}
 
-		// write(loop_length);
-		head=tail=0;
-		que[++tail]=loop[1];
+		// for (int i=1;i<=loop_cnt;i++) printf("%3lld ",i);printf("\n");
+		// for (int i=1;i<=loop_cnt;i++) printf("%3lld ",loop[i]);printf("\n");
+		// for (int i=1;i<=loop_cnt;i++) printf("%3lld ",dst[i]);printf("\n");
+		// for (int i=1;i<=loop_cnt;i++) printf("%3lld ",max_length[loop[i]]);printf("\n");
+		// printf("\n");
+
+		head=tail=1;
+		que[tail]=1;
 		for (int i=2;i<=loop_cnt;i++){
-			while (head+1<=tail && dst[i]-dst[head] > (loop_length)/2) head++;
-			while (head+1<=tail && max_length[que[head]]-dst[head] < max_length[que[head+1]]-dst[head+1]) head++;
-			ret=max(ret,max_length[que[head]]+max_length[loop[i]] + dst[i]-dst[head]);
-			que[++tail]=loop[i];
+			while (head<=tail && (!(dst[i]-dst[que[head]] <= (loop_length)/2))) head++;
+			while (head+1<=tail && max_length[loop[que[head]]]-dst[que[head]] < max_length[loop[que[head+1]]]-dst[que[head+1]]) head++;
+			// printf("i=%lld head=%lld tail=%lld\n",i,head,tail);
+			// if (head<=tail && dst[i]-dst[que[head]] <= (loop_length)/2) printf("now: %lld\n",max_length[loop[que[head]]]+max_length[loop[i]] + dst[i]-dst[que[head]]);
+			if (head<=tail && dst[i]-dst[que[head]] <= (loop_length)/2) ret=max(ret,max_length[loop[que[head]]]+max_length[loop[i]] + dst[i]-dst[que[head]]);
+			while (tail>=head && max_length[loop[que[tail]]]-dst[que[tail]] < max_length[loop[i]]-dst[i]) tail--;
+			que[++tail]=i;
 		}
 		return ret;
 	}
@@ -108,9 +113,9 @@ namespace tree{
 		pair<int,int> ret;
 		ret=make_pair(x,0);
 		for (int i=lnk[x];i;i=nxt[i]) if (son[i]!=fa && in_loop[son[i]]==false){
-			pair<int,int> now=DFS(son[i],x);
+			pair<int,int> now;now=DFS(son[i],x);
 			now.second+=w[i];
-			if (now.second+w[i]>ret.second) ret=now;
+			if (now.second>ret.second) ret=now;
 		}
 		return ret;
 	}
@@ -126,8 +131,6 @@ namespace tree{
 }
 
 signed main(){
-	// freopen("darksoul.in","r",stdin);
-	// freopen("darksoul.out","w",stdout);
 	n=read();
 	for (int i=1;i<=n;i++){
 		int x=read(),y=read(),z=read();
@@ -136,7 +139,7 @@ signed main(){
 	graph::find_loop();
 	for (int i=1;i<=n;i++)
 		if (in_loop[i]) max_length[i]=tree::find_max_length(i);
-	// for (int i=1;i<=n;i++) if (in_loop[i]) printf("max_length[%lld]=%lld\n",i,max_length[i]);
+	// for (int i=1;i<=n;i++) if (in_loop[i]) printf("%lld max_length=%lld\n",i,max_length[i]);
 	ans=max(ans,graph::make_answer());
 	printf("%lld\n",ans);
 	return 0;
