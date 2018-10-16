@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-const int maxn=200;
+const int maxn=20;
 int n;
 bool built[maxn];
 vector<pair<int,int> > edges;
@@ -9,7 +9,7 @@ bool vis[maxn][maxn];
 
 int main() {
     srand(time(NULL));
-    n=rand()%100+5;
+    n=rand()%10+5;
     printf("%d\n",n);
     edges.clear();
     built[1]=true;
@@ -20,10 +20,6 @@ int main() {
         vis[now][i]=vis[i][now]=true;
         built[i]=true;
     }
-    int x=rand()%n+1;
-    int y=rand()%n+1;
-    while (x==y || vis[x][y] || vis[y][x]) x=rand()%n+1,y=rand()%n+1;
-    edges.push_back(make_pair(x,y));
-    for (int i=0;i<n;i++) printf("%d %d %d\n",edges[i].first,edges[i].second,rand()%13+1);
+    for (int i=0;i<n-1;i++) printf("%d %d %d\n",edges[i].first,edges[i].second,rand()%6+1);
     return 0;
 }
