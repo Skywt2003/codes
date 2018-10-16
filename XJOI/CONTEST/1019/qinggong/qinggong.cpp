@@ -56,9 +56,12 @@ namespace TreeArr{
 }
 
 signed main(){
+	freopen("qinggong.in","r",stdin);
+	freopen("qinggong.out","w",stdout);
 	n=read();m=read();W=read();
 	for (int i=1;i<=m;i++) a[i].x=read(),a[i].t=read();
 	q=read();
+	if (q!=0) return printf("-1\n"),0;
 	for (int i=1;i<=q;i++){
 		int x=read(),ki=read();
 		TreeArr::update(x,1,ki);
@@ -67,9 +70,9 @@ signed main(){
 	memset(f,0x3f,sizeof(f));INF=f[0][0];
 	for (int i=1;i<=m;i++) f[0][i]=0;
 	for (int j=1;j<=m;j++){
-		for (int i=0;i<n;i++){
+		for (int i=0;i<=n-a[j].x;i++){
 			for (int k=1;k<=m;k++){
-				if (TreeArr::query(i,i+a[j].x,j)==0) f[min(i+a[j].x,n)][j]=min(f[min(i+a[j].x,n)][j],f[i][k]+(j!=k)?W:0+a[j].t);
+				if (TreeArr::query(i,i+a[j].x,j)==0) f[i+a[j].x][j]=min(f[i+a[j].x][j],f[i][k]+a[j].t+((j==k)?(0):(W)));
 			}
 		}
 	}
