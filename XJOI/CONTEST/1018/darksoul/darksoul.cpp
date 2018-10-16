@@ -81,11 +81,11 @@ namespace graph{
 			return ret;
 		}
 
-		for (int i=1;i<=loop_cnt;i++) printf("%3lld ",i);printf("\n");
-		for (int i=1;i<=loop_cnt;i++) printf("%3lld ",loop[i]);printf("\n");
-		for (int i=1;i<=loop_cnt;i++) printf("%3lld ",dst[i]);printf("\n");
-		for (int i=1;i<=loop_cnt;i++) printf("%3lld ",max_length[loop[i]]);printf("\n");
-		printf("\n");
+		// for (int i=1;i<=loop_cnt;i++) printf("%3lld ",i);printf("\n");
+		// for (int i=1;i<=loop_cnt;i++) printf("%3lld ",loop[i]);printf("\n");
+		// for (int i=1;i<=loop_cnt;i++) printf("%3lld ",dst[i]);printf("\n");
+		// for (int i=1;i<=loop_cnt;i++) printf("%3lld ",max_length[loop[i]]);printf("\n");
+		// printf("\n");
 
 		head=tail=1;
 		que[tail]=1;
@@ -132,15 +132,22 @@ namespace tree{
 
 signed main(){
 	n=read();
+	bool zih=false;
 	for (int i=1;i<=n;i++){
 		int x=read(),y=read(),z=read();
+		if (x==y) {zih=true;continue;}
 		add(x,y,z);add(y,x,z);
+	}
+	if (zih){
+		tree::find_max_length(1);
+		printf("%lld\n",ans+1);
+		return 0;
 	}
 	graph::find_loop();
 	for (int i=1;i<=n;i++)
 		if (in_loop[i]) max_length[i]=tree::find_max_length(i);
 	// for (int i=1;i<=n;i++) if (in_loop[i]) printf("%lld max_length=%lld\n",i,max_length[i]);
 	ans=max(ans,graph::make_answer());
-	printf("%lld\n",ans);
+	printf("%lld\n",ans+1);
 	return 0;
 }
