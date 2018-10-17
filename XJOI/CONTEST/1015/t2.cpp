@@ -12,6 +12,7 @@ const int maxn=305;
 
 int n,m,INF;
 int f[maxn][maxn],ans[maxn][maxn];
+int p[maxn];
 
 struct edge{
 	int x,y,w;
@@ -19,7 +20,7 @@ struct edge{
 vector<edge> e;
 
 struct vertex{
-	int x,w;
+	int x,id;
 };
 vector<vertex> v;
 
@@ -43,22 +44,22 @@ signed main(){
 
 	memset(ans,0x3f,sizeof(ans));INF=ans[0][0];
 	memset(f,0x3f,sizeof(f));
-	for (int i=0;i<n;i++) f[i][i]=0;
+	for (int i=0;i<n;i++) f[i][i]=ans[i][i]=0,p[i]=v[i].x;
 	for (int i=0;i<m;i++) f[e[i].x][e[i].y]=f[e[i].y][e[i].x]=e[i].w;
 
 	sort(v.begin(),v.end(),compare);
 	for (int k=0;k<n;k++){
-		for (int i=0;i<n;i++) if (i!=k)
-			for (int j=0;j<n;j++) if (i!=j&&k!=j)
-				f[i][j]=max(f[i][j],max(f[i][k],f[k][j]));
-		for (int i=0;i<n;i++)
-			for (int j=0;j<n;j++) if (i!=j && f[i][j]!=INF)
+		for (int i=0;i<n;i++) if (i!=v[k].id)
+			for (int j=0;j<n;j++) if (i!=j&&v[k].id!=j)
+				f[i][j]=min(f[i][j],max(f[i][v[k].id],f[v[k].id][j]));
+		for (int i=0;i<n;i++) if (p[i]<=v[k].x)
+			for (int j=0;j<n;j++) if (i!=j && p[j]<=v[k].x && f[i][j]!=INF)
 				ans[i][j]=min(ans[i][j],f[i][j]*v[k].x);
 	}
 	int ans_tot=0;
 	for (int i=0;i<n;i++)
-		for (int j=0;j<n;j++) if (i!=j)
+		for (int j=i+1;j<n;j++)
 			ans_tot+=ans[i][j];
-	printf("%lld\n",ans_tot/2);
+	printf("%lld\n",ans_tot);
 	return 0;
 }

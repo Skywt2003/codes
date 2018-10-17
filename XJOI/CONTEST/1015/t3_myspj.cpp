@@ -33,7 +33,7 @@ inline int read(){
 	return ret*f;
 }
 
-const int maxn=105;
+const int maxn=605;
 int n=0;
 int a[maxn];
 

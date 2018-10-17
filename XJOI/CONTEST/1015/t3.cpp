@@ -1,7 +1,7 @@
 /*
  * XJOI CONTEST 1015
  * T3 - 初等数论 (unac)
- * 181008 By SkyWT
+ * 181017 By SkyWT
  */
 
 #include<cstdio>
@@ -35,15 +35,20 @@ inline int read(){
 	return ret*f;
 }
 
-const int maxn=105;
-int n,now=4;
-vector <int> a[maxn];
+const int maxn=505;
+int n,a[maxn];
 vector <int> prime;
-map <int,bool> vis;
-map <int,bool> chs;
+
+inline int Abs(int x){
+	return x<0?-x:x;
+}
+
+inline int gcd(int x,int y){
+	return y?gcd(y,x%y):x;
+}
 
 inline void make_prime(){
-	const int maxnum=1000;
+	const int maxnum=1000000;
 	bool vis[maxnum+5];
 	memset_clear_tre(vis);
 	prime.clear();
@@ -60,32 +65,27 @@ inline void make_prime(){
 
 signed main(){
 	n=read();
+	for (int i=1;i<=n;i++) a[i]=1;
 	make_prime();
-	a[1].push_back(2);a[1].push_back(5);
-	a[2].push_back(3);a[2].push_back(7);
-	for (int i=3;i<=n;i++){
-		vis.clear();chs.clear();
-		for (int k=0;k<a[i-1].size();k++) vis[a[i-1][k]]=true;
-		for (int j=1;j<=i-2;j++){
+	srand(517666);
+	for (int i=0;i<3000000;i++){
+		int nowx=rand()%n+1,nowy=rand()%n+1;
+		if (Abs(nowx-nowy)<=1) continue;
+		if (gcd(a[nowx],a[nowy])!=1) continue;
+		for (int j=0;j<prime.size();j++) if (gcd(a[nowx]*prime[j],a[nowy]*prime[j])!=1){
 			bool flg=false;
-			for (int k=0;k<a[j].size();k++){
-				if (vis[a[j][k]]) continue;
-				if (chs[a[j][k]]) {flg=true;break;}
-			}
+			if (nowx>1 && a[nowx-1]%prime[j]==0) flg=true;
+			if (nowx<n && a[nowx+1]%prime[j]==0) flg=true;
+			if (nowy>1 && a[nowy-1]%prime[j]==0) flg=true;
+			if (nowy<n && a[nowy+1]%prime[j]==0) flg=true;
 			if (flg) continue;
-			for (int k=0;k<a[j].size();k++) if (!vis[a[j][k]]){
-				a[i].push_back(a[j][k]);
-				chs[a[j][k]]=true;
-				break;
-			}
+			if (a[nowx]%prime[j]) a[nowx]*=prime[j];
+			if (a[nowy]%prime[j]) a[nowy]*=prime[j];
+			break;
 		}
-		a[i].push_back(prime[now++]);
+		if (gcd(a[nowx],a[nowy])==1) printf("fuck\n");
 	}
-	for (int i=1;i<=n;i++){
-		int now=1;
-		for (int j=0;j<a[i].size();j++) now=now*a[i][j];
-		printf("%lld ",now);
-	}
+	for (int i=1;i<=n;i++) printf("%lld ",a[i]);
 	printf("\n");
 	return 0;
 }
