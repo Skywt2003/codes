@@ -68,7 +68,7 @@ signed main(){
 	for (int i=1;i<=n;i++) a[i]=1;
 	make_prime();
 	srand(517666);
-	for (int i=0;i<3000000;i++){
+	for (int i=0;i<000000;i++){
 		int nowx=rand()%n+1,nowy=rand()%n+1;
 		if (Abs(nowx-nowy)<=1) continue;
 		if (gcd(a[nowx],a[nowy])!=1) continue;
