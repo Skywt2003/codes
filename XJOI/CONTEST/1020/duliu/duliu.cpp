@@ -10,7 +10,7 @@ using namespace std;
 
 const int maxn=200007;
 int n,a[maxn],b[maxn];
-int spc,ans;
+int ans=0,spc=-1;
 
 inline int read(){
 	int ret=0,f=1;char ch=getchar();
@@ -22,11 +22,6 @@ inline int read(){
 namespace Number{
 	map<int,int> num;
 	int cnt=0;
-
-	inline void init(){
-		num.clear();
-		cnt=0;
-	}
 
 	inline int getnum(int x){
 		if (num[x]==0){
@@ -56,17 +51,16 @@ namespace UniSet{
 
 	bool vis[maxn];
 
-	inline int count(){
+	inline void count(){
 		memset(vis,0,sizeof(vis));
-		int ret=0;
 		for (int i=1;i<=Number::cnt;i++){
-			int now=getfa(i);
-			if (now==i) continue;
-			if (vis[now]) continue;
-			vis[now]=true;
-			if (now==UniSet::getfa(spc)) ret+=sum[now]; else ret+=sum[now]+1;
+			int f=getfa(i);
+			if (vis[f]) continue;
+			vis[f]=true;
+			if (sum[f]==1 && f!=spc) continue;
+			ans++;
 		}
-		return ret==0?0:ret-1;
+		ans--;
 	}
 }
 
@@ -81,11 +75,11 @@ signed main(){
 	n=read();
 	for (int i=1;i<=n;i++) a[i]=read(),a[n+1]^=a[i];
 	for (int i=1;i<=n;i++) b[i]=read(),b[n+1]^=b[i],ans+=a[i]!=b[i];
-	ans+=a[n+1]!=b[n+1];
-	UniSet::init(n+1);Number::init();
-	for (int i=1;i<=n+1;i++) UniSet::merge(Number::getnum(a[i]),Number::getnum(b[i]));
 	spc=Number::getnum(a[n+1]);
+	UniSet::init(n+1);
+	for (int i=1;i<=n+1;i++) UniSet::merge(Number::getnum(a[i]),Number::getnum(b[i]));
 	if (!check()) return 0;
-	printf("%lld\n",UniSet::count());
+	UniSet::count();
+	printf("%lld\n",ans<0?0:ans);
 	return 0;
 }
