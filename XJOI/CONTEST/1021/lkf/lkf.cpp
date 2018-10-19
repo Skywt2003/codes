@@ -1,15 +1,14 @@
 #include<cstdio>
 #include<cstring>
 #include<iostream>
+#include<algorithm>
+#include<vector>
 
-#define int long long
 using namespace std;
+#define int long long
 
 const int tt=19260817;
-const int maxn=30,maxe=2*maxn;
-int n,m,a[maxn];
-int tot=0,lnk[maxn],son[maxe],nxt[maxe];
-bool vis[maxn];
+const int maxn=3333+10,maxe=maxn*2;
 
 inline int read(){
 	int ret=0,f=1;char ch=getchar();
@@ -18,95 +17,43 @@ inline int read(){
 	return ret*f;
 }
 
+int n,k;
+int a[maxn];
+int tot=0,lnk[maxn],son[maxe],nxt[maxe];
+struct vertex{
+	int x,id;
+};
+vector<vertex> v;
+int ans=0;
+bool vis[maxn];
+
 inline void add(int x,int y){
-	tot++;son[tot]=y;nxt[tot]=lnk[x];lnk[x]=tot;
+	tot++;son[tot]=y;
+	nxt[tot]=lnk[x];lnk[x]=tot;
 }
 
-inline void DFS(int x,int s){
-	vis[x]=true;
-	for (int i=lnk[x];i;i=nxt[i]) if ((!vis[son[i]])&&(((1<<son[i])&s))) DFS(son[i],s);
+inline bool compare(vertex aa,vertex bb){
+	return (aa.x<bb.x)||(aa.x==bb.x&&aa.id<bb.id);
 }
 
-namespace SubTask2{
-	const int maxn=3333+10,maxe=2*maxn;
-	int tot=0,lnk[maxn],son[maxe],nxt[maxe];
-	struct vertex{
-		int nxt,pre;
-	}v[maxn];
-	int head,tail;
-
-	inline void add(int x,int y){
-		tot++;son[tot]=y;nxt[tot]=lnk[x];lnk[x]=tot;
-	}
-
-	inline void init(){
-		for (int i=1;i<=n;i++) a[i]=read();
-		for (int i=1;i<n;i++){
-			int x=read(),y=read();
-			add(x,y);add(y,x);
-		}
-		head=-1;
-		for (int i=1;i<=n;i++) if (nxt[lnk[i]]==0){
-			head=i;
-			break;
-		}
-		int lst=-1,now=head;
-		for (int i=1;i<n;i++){
-			v[now].pre=lst;
-			for (int j=lnk[now];j;j=nxt[j]) if (son[j]!=lst){
-				v[now].nxt=son[j];
-				break;
-			}
-			lst=now;
-			now=v[now].nxt;
-		}
-		v[now].pre=lst;v[now].nxt=-1;
-		tail=now;
-	}
-
-	signed main(){
-		init();
-		int ans=0;
-		for (int i=head;i!=-1;i=v[i].nxt){
-			int minnum=1<<30,maxnum=-(1<<30);
-			for (int j=i;j!=-1;j=v[j].nxt){
-				minnum=min(minnum,a[j]);
-				maxnum=max(maxnum,a[j]);
-				if (maxnum-minnum==m) ans++; else
-				if (maxnum-minnum>m) break;
-			}
-		}
-		printf("%lld\n",ans);
-		return 0;
-	}
+inline int DFS(int x,int fa,int k,int st){
+	int ret=1;
+	for (int i=lnk[x];i;i=nxt[i]) if (a[son[i]]<=st+k && son[i]!=fa && (!vis[son[i]])) ret=(ret*DFS(son[i],x,k,st))%tt;
+	return (ret+(fa!=-1))%tt;
 }
 
 signed main(){
-	freopen("lkf.in","r",stdin);
-	freopen("lkf.out","w",stdout);
-	n=read();m=read();
-	if (n>22) return SubTask2::main();
-	for (int i=0;i<n;i++) a[i]=read();
+	n=read();k=read();
+	for (int i=1;i<=n;i++) a[i]=read(),v.push_back((vertex){a[i],i});
 	for (int i=1;i<n;i++){
 		int x=read(),y=read();
-		add(x-1,y-1);add(y-1,x-1);
+		add(x,y);add(y,x);
 	}
-	int s=1<<n,ans=0;
-	for (int i=1;i<s;i++){
-		int minnum=1<<30,maxnum=-(1<<30);
-		for (int j=0;j<n;j++) if (i&(1<<j)){
-			minnum=min(minnum,a[j]);
-			maxnum=max(maxnum,a[j]);
-		}
-		if (maxnum-minnum!=m) continue;
-		memset(vis,0,sizeof(vis));
-		for (int j=0;j<n;j++) if (i&(1<<j)){
-			DFS(j,i);
-			break;
-		}
-		bool flg=true;
-		for (int j=0;j<n;j++) if ((i&(1<<j))&&(vis[j]==false)) {flg=false;break;}
-		ans+=flg;
+	sort(v.begin(),v.end(),compare);
+	for (int i=0;i<n;i++){
+		vis[v[i].id]=true;
+		if (k==0) ans=(ans+DFS(v[i].id,-1,k,v[i].x))%tt;
+		else ans=(ans+(DFS(v[i].id,-1,k,v[i].x)-DFS(v[i].id,-1,k-1,v[i].x)+tt)%tt)%tt;
 	}
 	printf("%lld\n",ans);
 	return 0;
