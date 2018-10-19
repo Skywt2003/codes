@@ -14,28 +14,36 @@ int fa_edge[maxn],ans[maxe];
 
 namespace Tree{
 	int deep[maxn],fa[maxn];
-	int f[maxn][23];
+	int f[maxn][27];
 
 	inline void make_tree(int x){
 		for (int i=lnk[x];i;i=nxt[i]) if (son[i]!=fa[x]){
 			fa[son[i]]=x;fa_edge[son[i]]=(i+1)/2;
 			deep[son[i]]=deep[x]+1;
-			make_tree(x);
+			make_tree(son[i]);
 		}
 	}
 
 	inline void build_lca(){
 		for (int i=1;i<=n;i++) f[i][0]=fa[i];
-		for (int j=1;j<=22;j++)
+		for (int j=1;j<=26;j++)
 			for (int i=1;i<=n;i++) f[i][j]=f[f[i][j-1]][j-1];
 	}
 
 	inline int get_lca(int x,int y){
 		if (deep[x]<deep[y]) swap(x,y);
-		for (int i=22;i>=0;i--) if (deep[f[x][i]]>=deep[y]) x=f[x][i];
+		for (int i=26;i>=0;i--) if (deep[f[x][i]]>=deep[y]) x=f[x][i];
 		if (x==y) return x;
-		for (int i=22;i>=0;i--) if (f[x][i]!=f[y][i]) x=f[x][i],y=f[y][i];
+		for (int i=26;i>=0;i--) if (f[x][i]!=f[y][i]) x=f[x][i],y=f[y][i];
 		return fa[x];
+	}
+
+	inline void writelook(){
+		printf("Write Look: ================\n");
+		printf("ID:    ");for (int i=1;i<=n;i++) printf("%3lld ",i);printf("\n");
+		printf("DEEP[]:");for (int i=1;i<=n;i++) printf("%3lld ",deep[i]);printf("\n");
+		printf("FA[]:  ");for (int i=1;i<=n;i++) printf("%3lld ",fa[i]);printf("\n");
+		printf("END ==========================");
 	}
 }
 
@@ -55,7 +63,7 @@ namespace UniSet{
 	inline void merge(int x,int y){
 		x=getfa(x),y=getfa(y);
 		if (x==y) return;
-		if (Tree::deep[x]<Tree::deep[y]) fa[y]=x; else fa[x]=y;
+		if (Tree::deep[x] < Tree::deep[y]) fa[y]=x; else fa[x]=y;
 	}
 }
 
@@ -76,7 +84,7 @@ inline void add(int x,int y,int z){
 	nxt[tot]=lnk[x];lnk[x]=tot;
 }
 
-inline bool compare(edge aa,edge bb){
+inline bool cmp(edge aa,edge bb){
 	return aa.w<bb.w;
 }
 
@@ -86,26 +94,36 @@ signed main(){
 		int x=read(),y=read();
 		add(x,y,0);add(y,x,0);
 	}
+	Tree::deep[1]=1;
 	Tree::make_tree(1);
 	Tree::build_lca();
 	UniSet::init(n);
+
+	edges.clear();
 	for (int i=1;i<=m;i++){
 		int x=read(),y=read(),z=read();
 		edges.push_back((edge){x,y,z});
 	}
-	sort(edges.begin(),edges.end(),compare);
+	sort(edges.begin(),edges.end(),cmp);
+	memset(ans,255,sizeof(ans));
+
 	for (int i=0;i<edges.size();i++){
 		int x=edges[i].x,y=edges[i].y;
 		int f=Tree::get_lca(x,y);
-		for (;x!=f;){
+		// printf("X=%lld  Y=%lld  F=%lld\n",x,y,f);
+		for (;;){
 			x=UniSet::getfa(x);
-			ans[fa_edge[x]]=min(ans[fa_edge[x]],edges[i].w);
-			merge()
+			if (Tree::deep[x]<=Tree::deep[f]) break;
+			ans[fa_edge[x]]=edges[i].w;
+			UniSet::merge(x,Tree::fa[x]);
+			x=Tree::fa[x];
 		}
 		for (;;){
 			y=UniSet::getfa(y);
-			if (y==f) break;
-			ans[fa_edge[y]]=min(ans[fa_edge[y]],edges[i].w);
+			if (Tree::deep[y]<=Tree::deep[f]) break;
+			ans[fa_edge[y]]=edges[i].w;
+			UniSet::merge(y,Tree::fa[y]);
+			y=Tree::fa[y];
 		}
 	}
 	for (int i=1;i<n;i++) printf("%lld\n",ans[i]);
