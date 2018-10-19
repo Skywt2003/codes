@@ -1,7 +1,7 @@
 /*
- * XJOI CONTEST 1014
- * T2 - 加法与乘法（20）
- * 181017 By SkyWT
+*XJOI CONTEST 1014
+*T2-加法与乘法（20）
+*181017 By SkyWT
  */
 
 #include<cstdio>
@@ -33,9 +33,10 @@ inline int read(){
 	return ret*f;
 }
 
-const int INF=(int)1<<60;
+const int INF=1e18;
 int S,T,a,b;
 int ans=INF;
+int f[200];
 
 inline int qsm(int a,int b){
 	int ret=1,w=a;
@@ -48,55 +49,31 @@ inline int qsm(int a,int b){
 
 signed main(){
 	S=read(),T=read(),a=read(),b=read();
-	if (S==T){
-		printf("0\n");
-		return 0;
-	}
-	if (S*b==T){
-		printf("1\n");
-		return 0;
-	}
-	if (S>T && b==0){
-		if (a==0) printf("-1\n"); else
-		if (T%a) printf("-1\n"); else
-		printf("%lld\n",T/a+1);
-		return 0;
-	}
-	if (S>T){
+	if (S==T) return printf("0\n"),0;
+	if (!a&&!b) {
+		if (!T) return printf("1\n"),0; else return printf("-1"),0;
+	} else if (!a&&b) {
+		if ((a==0&&b==1)||!S) return printf("-1"),0;
+		for(int mul=1,tmp=0;S*mul<=T;mul*=b,tmp++) if(S*mul==T) ans=min(ans,tmp);
+		printf("%lld\n",(ans==INF)?-1:ans);
+	} else if (a&&!b) {
+		if (T>=S&&(T-S)%a==0) return printf("%lld\n",(T-S)/a),0;
+		if (T%a==0) return printf("%lld\n",T/a+1),0;
 		printf("-1\n");
-		return 0;
-	}
-	if (b==0 || b==1){
-		if (a==0) {printf(T==0?"1\n":"-1\n");return 0;}
-		if ((T-S)%a) printf("-1\n"); else printf("%lld\n",(T-S)/a);
-		return 0;
-	}
-	if (a==0){
-		int now=S,cnt=0;
-		if (now!=0) while (now<T) now*=b,cnt++;
-		if (now!=T) printf("-1\n"); else printf("%lld\n",cnt);
-		return 0;
-	}
-	for (int k=0;k<=62;k++){
-		int x=qsm(b,k);
-		if (x<0) break;
-		if (S*x>T) break; else
-		if (S*x==T){
-			ans=min(ans,k);
-			break;
-		} else {
-			int delta=T-S*x,now=k;
+	} else {
+		int flag=0;
+		if (b==1) {
+			if ((T-S)%a==0&&T>=S) return printf("%lld\n",(T-S)/a),0; else return printf("-1\n"),0;
+		} else if (!S) S+=a,flag=1;
+		for (int mul=1,tmp=0;S*mul<=T;mul*=b,tmp++) {
+			int now=tmp,delta=T-S*mul;
+			f[tmp]=mul;
 			if (delta%a) continue;
 			delta/=a;
-			for (int i=k;i>=0;i--){
-				int q=qsm(b,i);
-				now+=delta/q;
-				delta%=q;
-			}
-			// printf("k=%lld  now=%lld\n",k,now);
+			for (int i=tmp;i!=-1;i--) now+=delta/f[i],delta%=f[i];
 			ans=min(ans,now);
 		}
+		printf("%lld\n",(ans==INF)?-1:(ans+flag));
 	}
-	if (ans<0 || ans==INF) printf("-1\n"); else printf("%lld\n",ans);
 	return 0;
 }
