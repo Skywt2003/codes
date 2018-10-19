@@ -1,7 +1,7 @@
 /*
 *XJOI CONTEST 1014
 *T2-加法与乘法（20）
-*181017 By SkyWT
+*181019 By SkyWT
  */
 
 #include<cstdio>
