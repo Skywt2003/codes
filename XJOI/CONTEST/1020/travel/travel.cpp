@@ -16,7 +16,7 @@ int n,a[maxn],d[maxn];
 int tot=0,lnk[maxn],nxt[maxe],son[maxe],p[maxn];
 int f[maxn],sum[maxn];
 int g[maxn],h[maxn];
-int ans=0;
+int ans[maxn];
 int fa[maxn][25],deep[maxn];
 
 inline int read(){
@@ -50,16 +50,32 @@ namespace Tree{
 	}
 
 	inline void _build_f(int x){
-
+		f[x]=sum[x];
+		for (int i=lnk[x];i;i=nxt[i]) if (son[i]!=fa[x][0]){
+			_build_f(son[i]);
+			f[i]+=f[son[i]];
+		}
 	}
 
 	inline void build_f(){
-		
+		for (int i=1;i<=n;i++) sum[i]+=a[i],sum[LCA::get_grandfa(i,d[i]+1)]-=a[i];
+		_build_f(1);
+	}
+	
+	inline void _build_answer(int x){
+		for (int i=lnk[x];i;i=nxt[i]) if (son[i]!=fa[x][0]){
+			h[x]=(h[x]+h[son[i]]*p[i])%tt;
+			g[x]=(sqr(h[x])%tt+p[i]*(2*h[x]*h[son[i]]+sqr(son[i])%tt)%tt)%tt;
+		}
+	}
+
+	inline void build_answer(){
+		_build_answer(1);
 	}
 }
 
 namespace LCA{
-	inline void build_lca(){
+	inline void build_grand_fathers(){
 		for (int j=1;j<25;j++)
 			for (int i=1;i<=n;i++)
 				fa[i][j]=fa[fa[i][j-1]][j-1];
@@ -92,5 +108,13 @@ signed main(){
 		add(x,y,z);add(y,x,z);
 	}
 	Tree::build_tree();
+	LCA::build_grand_fathers();
+	Tree::build_f();
+	Tree::build_answer();
+	int q=read();
+	while (q--){
+		int x=read();
+		printf("%lld\n",ans[x]);
+	}
 	return 0;
 }
