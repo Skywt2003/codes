@@ -7,7 +7,7 @@
 #define int long long
 using namespace std;
 
-const int maxn=4e5+5,INF=1e18;
+const int maxn=4e5+5,INF=1e10;
 int n,m;
 int a[maxn];
 int stack[maxn],stack_top=0;
@@ -23,11 +23,11 @@ inline int find(int x){
 	int L=1,R=stack_top;
 	while (L<=R){
 		int mid=((R-L)>>1)+L;
-		if (a[mid]>x && a[mid-1]<=x) return mid; else
-		if (a[mid]>x) R=mid-1; else L=mid+1;
+		if (a[mid]>x && a[mid-1]<x) return mid; else
+		if (a[mid]>x) R=mid-1; else
+		if (a[mid]<x) L=mid+1; else
+		if (a[mid]==x) return -1;
 	}
-	// printf("ERROR: Find %lld faild\n",x);
-	// printf("STACK: ");for (int i=1;i<=stack_top;i++) printf("%lld ",stack[i]);printf("\n");
 	return -1;
 }
 
@@ -61,6 +61,8 @@ namespace Subtask2{
 }
 
 signed main(){
+	freopen("kite.in","r",stdin);
+	freopen("kite.out","w",stdout);
 	n=read();m=read();
 	if (n>1000 || m>1000) return Subtask2::main();
 	for (int i=1;i<=n;i++) a[i]=read();

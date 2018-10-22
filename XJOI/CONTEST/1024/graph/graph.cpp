@@ -65,6 +65,8 @@ inline int query(int x,int y){
 }
 
 signed main(){
+	freopen("graph.in","r",stdin);
+	freopen("graph.out","w",stdout);
 	n=read();m=read();
 	for (int i=1;i<=m;i++){
 		int x=read(),y=read();
