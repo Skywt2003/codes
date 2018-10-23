@@ -22,7 +22,11 @@ signed main(){
 	for (int i=1;i<=n;i++) a[i]=read();
 	for (int i=1;i<=n;i++) b[i]=read()-a[i];
 	for (int i=1;i<=n;i++){
-		for (int j=62;j>=0;j--){
+		if (b[i]<0){
+			printf("Impossible\n");
+			return 0;
+		}
+		for (int j=63;j>=0;j--){
 			int now=(int)1<<j;
 			if (((a[i]&now)==0) && (b[i]&now)){
 				printf("Impossible\n");
