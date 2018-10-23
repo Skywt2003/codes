@@ -27,10 +27,15 @@ signed main(){
 	n=read();
 	for (int i=1;i<=n;i++) a[i]=read();
 	for (int i=1;i<=n;i++) b[i]=read()-a[i];
+	memset(f,true,sizeof(f));
 	for (int i=1;i<=n;i++){
 		for (int j=63;j>=0;j--){
-			if ((a[i]&1)==0 && (b[i]&1)) return na();
-			if (a[i]&1) f[i][1]=f[i+1][1];
+			int now=(int)1<<j;
+			if ((a[i]&now)==0 && (b[i]&now)   ) return na();
+			if ((a[i]&now)==0 && (b[i]&now)==0) f[i+1][j][1]=f[i][j][1]=false,f[i+1][j][0]=f[i][j][0];
+			if ((a[i]&now)    && (b[i]&now)==0) f[i+1][j][0]=f[i][j][1],f[i+1][j][1]=f[i][j][0];
+			if ((a[i]&now)    && (b[i]&now))    f[i+1][j][0]=f[i][j][0]=false,f[i+1][j][1]=f[i][j][1];
+			if (f[i][j][0]==false&&f[i][j][1]==false) return na();
 		}
 	}
 	printf("Possible\n");
