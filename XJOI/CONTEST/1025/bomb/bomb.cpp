@@ -70,8 +70,6 @@ inline void DFS(int x,int i){
 }
 
 signed main(){
-	freopen("bomb.in","r",stdin);
-	freopen("bomb.out","w",stdout);
 	n=read();m=read();
 	DFS(0,0);
 	printf("%lld\n",ans);
