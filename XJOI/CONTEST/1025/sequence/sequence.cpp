@@ -31,8 +31,6 @@ inline void build_com(){
 }
 
 signed main(){
-	freopen("sequence.in","r",stdin);
-	freopen("sequence.out","w",stdout);
 	n=read();m=read();
 	build_com();
 	for (int i=1;i<=m;i++){

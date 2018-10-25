@@ -41,8 +41,6 @@ namespace Subtask2{
 }
 
 signed main(){
-	freopen("queue.in","r",stdin);
-	freopen("queue.out","w",stdout);
 	n=read();m=read();
 	if (n>10000) return Subtask2::main();
 	for (int i=1;i<=n;i++) a[i]=read();
