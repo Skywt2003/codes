@@ -58,8 +58,6 @@ namespace Graph{
 }
 
 signed main(){
-	freopen("graph.in","r",stdin);
-	freopen("graph.out","w",stdout);
 	n=read();m=read();L=read();
 	for (int i=1;i<=n;i++) c[i]=read();
 	for (int i=1;i<=m;i++){
