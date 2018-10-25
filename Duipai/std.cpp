@@ -1,61 +1,60 @@
-#include<cstdio>
-#include<cstring>
-#include<iomanip>
-#include<iostream>
-#include<algorithm>
-#include<cmath>
-#include<ctime>
-#include<map>
-#include<set>
-#include<vector>
-#include<queue>
-#include<bitset>
-#include<stack>
-#include<cassert>
-#define F first
-#define S second
-#define mp make_pair
-#define pb push_back
-#define mem(x,y) memset(x,y,sizeof x)
-#define sqr(x) ((x)*(x))
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
 using namespace std;
-typedef long long ll;
-typedef double db;
-typedef pair<int,int> pii;
-typedef pair<ll,ll> pll;
-typedef pair<ll,int> pli;
-const int INF=2e9;
-const db eps=1e-12;
-template<typename T>
-inline void read(T &x) {
-  x=0; int f=1; char ch=getchar();
-  while( (ch<'0' || ch>'9') && ch!='-') ch=getchar(); if(ch=='-') {f=-1; ch=getchar();}
-  while(ch>='0' && ch <='9') x=x*10+ch-'0',ch=getchar();
-  x*=f;
+ 
+typedef long long li;
+ 
+li min(li a, int b) {
+  return min<li>(a, b);
 }
-//==========================head template==========================
-const int N=1000010;
-int n;
-ll f[N][2],len[N];
-int to[N<<1],nxt[N<<1],head[N],lst; ll c[N<<1];
-inline void adde(int x,int y,int z) {
-  nxt[++lst]=head[x]; to[lst]=y; c[lst]=z; head[x]=lst;
-}
-inline void DP(int x,int fa) {
-  for(int i=head[x];i;i=nxt[i])
-    if(to[i]!=fa) {
-      DP(to[i],x); len[x]=max(len[x],len[to[i]]+c[i]);
-      f[x][0]+=f[to[i]][0]+c[i]*2;
-      f[x][1]+=min(f[to[i]][0]-len[to[i]]+c[i],f[to[i]][1]+2*c[i]);
+ 
+const li inf = 1e18;
+const int maxn = 300;
+ 
+int n, a[maxn], goal;
+li dp[maxn + 1][2];
+ 
+li Solve(void) {
+  dp[0][0] = 0;
+  dp[0][1] = inf;
+ 
+  for (int i = 1; i <= n; ++i) {
+    dp[i][0] = dp[i][1] = inf;
+    if (a[i - 1] == goal) {
+      dp[i][0] = dp[i - 1][0];
+      dp[i][1] = dp[i - 1][0];
     }
-}
-signed main() {
-  read(n);
-  for(int i=1;i<n;i++) {
-    int x,y,z; read(x); read(y); read(z);
-    adde(x,y,z); adde(y,x,z);
+    li sum = 0, mn = inf;
+    for (int j = i - 1; j >= 0; --j) {
+      sum += a[j];
+      mn = min(mn, a[j]);
+      li val = (sum - mn) * mn + (i - j) * mn * goal;
+      dp[i][0] = min(dp[i][0], dp[j][0] + val);
+      dp[i][1] = min(dp[i][1], dp[j][1] + val);
+    }
   }
-  DP(1,0);
-  printf("%lld\n",f[1][1]);
+ 
+  return dp[n][1];
+}
+ 
+li Main(void) {
+  li ans = inf;
+  for (int i = 0; i < n; ++i) {
+    goal = a[i];
+    ans = min(ans, Solve());
+  }
+  return ans;
+}
+ 
+int main(void) {
+  int T;
+  scanf("%d", &T);
+  while (T--) {
+    scanf("%d", &n);
+    for (int i = 0; i < n; ++i) scanf("%d", a + i);
+    li ans = Main();
+    printf("%lld\n", ans);
+  }
   return 0;
 }
