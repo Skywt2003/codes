@@ -49,8 +49,6 @@ namespace Graph{
 }
 
 signed main(){
-	freopen("center.in","r",stdin);
-	freopen("center.out","w",stdout);
 	n=read();m=read();q=read();
 	for (int i=1;i<=m;i++){
 		int x=read(),y=read();
@@ -63,8 +61,7 @@ signed main(){
 	while (q--){
 		int k=read();
 		memset(vis,0,sizeof(vis));
-		for (int i=1;i<=k;i++) a[i]=read();
-		for (int i=1;i<=k;i++) d[i]=read();
+		for (int i=1;i<=k;i++) a[i]=read(),d[i]=read();
 		for (int i=1;i<=k;i++){
 			for (int j=1;j<=n;j++) if (dst[a[i]][j] <= d[i]) vis[j]=true;
 		}

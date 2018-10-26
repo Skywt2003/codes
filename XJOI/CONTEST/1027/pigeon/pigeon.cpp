@@ -21,8 +21,6 @@ int s[maxn],a[maxn];
 vector<int> vec;
 
 signed main(){
-	freopen("pigeon.in","r",stdin);
-	freopen("pigeon.out","w",stdout);
 	n=read();m=read();
 	for (int i=1;i<=n;i++) s[i]=read();
 	for (int i=1;i<=n/2;i++) swap(s[i],s[n-i+1]);
