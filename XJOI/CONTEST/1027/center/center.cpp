@@ -16,15 +16,39 @@ inline int read(){
 }
 
 const int maxn=1005,maxe=1000005;
-int n,m,q,INF;
-int tot=0,lnk[maxn],nxt[maxe],son[maxe];
+int n,m,q;
 int dst[maxn][maxn];
-int a[maxn],d[maxn];
+vector<int> lnk[maxn];
 
-inline void add_edge(int x,int y){
-	tot++;son[tot]=y;
-	nxt[tot]=lnk[x];lnk[x]=tot;
-}
+struct bitset{
+	static const int maxn=35,maxm=30;
+	int set[maxn];
+
+	inline void clear(){
+		memset(set,0,sizeof(set));
+	}
+
+	inline bool operator [](int index){
+		index--;
+		return (set[index/maxm]>>index%maxm)&1;
+	}
+
+	inline void set_value(int index,int value){
+		index--;
+		if (value) set[index/maxm]|=(int)1<<index%maxm; else set[index/maxm]&=~((int)1<<index%maxm);
+	}
+
+	inline void merge(bitset &b){
+		for (int i=0;i<maxn;i++) set[i]|=b.set[i];
+	}
+
+	inline int count(){
+		int ret=0;
+		for (int i=0;i<maxn;i++) ret+=__builtin_popcount(set[i]);
+		return ret;
+	}
+};
+bitset v[maxn][maxn];
 
 namespace Graph{
 	queue<int> que;
@@ -36,15 +60,21 @@ namespace Graph{
 	}
 
 	inline void BFS(int s){
-		memset(dst[s],0x3f,sizeof(dst[s]));INF=dst[s][0];
-		que.push(s);vis[s]=true;dst[s][s]=0;
+		memset(dst[s],0x3f,sizeof(dst[s]));
+		for (int i=0;i<=n;i++) v[s][i].clear();
+		que.push(s);vis[s]=true;dst[s][s]=0;v[s][0].set_value(s,true);
 		while (!que.empty()){
 			int head=que.front();que.pop();
-			for (int i=lnk[head];i;i=nxt[i]) if (!vis[son[i]]){
-				dst[s][son[i]]=dst[s][head]+1;
-				vis[son[i]]=true;que.push(son[i]);
+			for (int is=0;is<lnk[head].size();is++){
+				int now=lnk[head][is];
+				if (!vis[now]){
+					dst[s][now]=dst[s][head]+1;
+					v[s][dst[s][now]].set_value(now,true);
+					vis[now]=true;que.push(now);
+				}
 			}
 		}
+		for (int i=1;i<=n;i++) v[s][i].merge(v[s][i-1]);
 	}
 }
 
@@ -52,22 +82,18 @@ signed main(){
 	n=read();m=read();q=read();
 	for (int i=1;i<=m;i++){
 		int x=read(),y=read();
-		add_edge(x,y);add_edge(y,x);
+		lnk[x].push_back(y);
+		lnk[y].push_back(x);
 	}
-	
+
 	for (int i=1;i<=n;i++) Graph::init(),Graph::BFS(i);
 
-	bool vis[maxn];
 	while (q--){
 		int k=read();
-		memset(vis,0,sizeof(vis));
-		for (int i=1;i<=k;i++) a[i]=read(),d[i]=read();
-		for (int i=1;i<=k;i++){
-			for (int j=1;j<=n;j++) if (dst[a[i]][j] <= d[i]) vis[j]=true;
-		}
-		int ans=0;
-		for (int i=1;i<=n;i++) ans+=vis[i];
-		printf("%lld\n",ans);
+		bitset ans;ans.clear();
+		int a_now,d_now;
+		for (int i=1;i<=k;i++) a_now=read(),d_now=read(),ans.merge(v[a_now][d_now]);
+		printf("%lld\n",ans.count());
 	}
 	return 0;
 }

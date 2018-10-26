@@ -41,7 +41,10 @@ signed main(){
 			vec[n-i-j].first--;
 			f[vec[n-i-j].second][now]=true;
 		}
-		for (int j=1;j<n-i-cnt;j++) f[now][vec[j].second]=true;
+		for (int j=1;j<n-i-cnt;j++){
+			f[now][vec[j].second]=true;
+			printf("%lld => %lld\n",now,vec[j].second);
+		}
 		vector<pair<int,int> > nxt;nxt.clear();
 		for (int j=1;j<vec.size();j++) nxt.push_back(vec[j]);
 		vec=nxt;
@@ -55,7 +58,6 @@ signed main(){
 	for (int i=1;i<=n;i++)
 		for (int j=1;j<=n;j++){
 			ans+=f[i][j];
-			// if (f[i][j]) printf("%lld => %lld\n",i,j);
 		}
 	printf("%lld\n",ans);
 	return 0;
