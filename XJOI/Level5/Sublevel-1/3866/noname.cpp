@@ -15,7 +15,7 @@ inline int read(){
 }
 
 const int maxn=15,maxs=1024+10;
-int n,a[maxn];
+int n,s,a[maxn];
 int f[maxn][maxs][2];
 
 inline void init(){
@@ -23,7 +23,18 @@ inline void init(){
 }
 
 signed main(){
-	n=read();
-	for (int i=1;i<=n;i++) a[i]=read();
+	n=read();s=1<<n;
+	for (int i=0;i<n;i++) a[i]=read();
 	init();
+	for (int i=1;i<=31;i++){
+		for (int j=0;j<s;j++){
+			for (int k=0;k<n;k++) if (j&(1<<k)){ // 处于最高位
+				f[i+1][s][a[k]&(1<<i)] += f[i][s][a[k]&(1<<(i-1))];
+				if (a[i]&(1<<i)) f[i+1][s-(1<<i)][0]+=f[i][s][1];
+			} else {
+				f[i+1][s][0]+=f[i][s][0]+f[i][s][1];
+				if (a[i]&(1<<i)) f[i+1][s][1]+=f[i][s][0]+f[i][s][1];
+			}
+		}
+	}
 }
