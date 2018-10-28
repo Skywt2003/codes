@@ -1,7 +1,7 @@
 /*
  * Vjudge CONTEST 239393
  * F - Mondriaan's Dream
- * 181014 By SkyWT
+ * 181027 By SkyWT
  */
 
 #include<cstdio>
@@ -16,17 +16,13 @@
 #include<map>
 
 using namespace std;
+#define int long long
 
 #define memset_clear(_) memset(_,0,sizeof(_))
-#define memset_clear_tre(_) memset(_,1,sizeof(_))
-#define memset_clear_reg(_) memset(_,-1,sizeof(_))
-#define memset_clear_max(_) memset(_,0x3f,sizeof(_))
-#define memset_clear_min(_) memset(_,0x80,sizeof(_))
 #define sqr(_) ((_)*(_))
 
 #define write(_) cout<<#_<<" = "<<_<<endl;
 
-#define int long long
 
 namespace FastIO{
 	int read(){
@@ -38,29 +34,28 @@ namespace FastIO{
 }
 
 const int maxn=15,maxs=2048+20;
-int n,m,s,f[2][maxs];
+int n,m,s;
 
 namespace DP{
-	void init(){
+	int h,f[2][maxs];
+
+	inline void init(){
 		memset_clear(f);
-		s=1<<m;
+		s=1<<m;h=1<<(m-1);
 	}
-	void make_answer(){
+
+	inline void solve(){
 		if ((n&1)&&(m&1)) return;
-		f[1][0]=1;
-		int cur=0;
+		f[0][s-1]=1;int now=0;
 		for (int i=0;i<n;i++){
 			for (int j=0;j<m;j++){
-				cur^=1;
-				memset_clear(f[i&1]);
-				for (int k=0;k<s;k++){
-					
-				}
+				now^=1;memset(f[now],0,sizeof(f[now]));
+				for (int k=0;k<s;k++) if (k&h){
+					f[now][(k^h)<<1]+=f[now^1][k];
+					if (j!=0 && !(k&1)) f[now][((k^h)<<1)|3]+=f[now^1][k];
+				} else  if (i!=0) f[now][((k&(h-1))<<1)|1]+=f[now^1][k];
 			}
 		}
-	}
-	int get_answer(){
-
 	}
 }
 
@@ -68,8 +63,8 @@ signed main(){
 	n=FastIO::read();m=FastIO::read();
 	while (n||m){
 		DP::init();
-		DP::make_answer();
-		printf("%lld\n",DP::get_answer());
+		DP::solve();
+		printf("%lld\n",DP::f[n*m&1][s-1]);
 		n=FastIO::read();m=FastIO::read();
 	}
 	return 0;
