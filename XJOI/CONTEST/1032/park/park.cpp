@@ -1,35 +1,39 @@
+#pragma GCC optimize(2)
+
 #include<cstdio>
 #include<cstring>
 #include<iostream>
 #include<algorithm>
 #include<vector>
 
-#define int long long
+#define max(x,y) ((x)<(y)?(y):(x))
+#define min(x,y) ((x)>(y)?(y):(x))
 using namespace std;
 
-const int maxn=4005;
+const int maxn=40005;
 int n,q,d[maxn],l[maxn];
+int L,R,x,now,ans;
 
-inline int read(){
-	int ret=0,f=1;char ch=getchar();
-	while (ch<'0'||ch>'9') {if (ch=='-') f=-1;ch=getchar();}
-	while (ch>='0'&&ch<='9') ret=ret*10+ch-'0',ch=getchar();
-	return ret*f;
+template<class T>inline void read(T &x) {
+    x=0;T f=1;char ch=getchar();
+    while(!isdigit(ch)){if(ch=='-')f=-1;ch=getchar();}
+    while(isdigit(ch))x=x*10+ch-48,ch=getchar();
+    x*=f;
 }
 
-signed main(){
-	n=read();q=read();
-	for (int i=1;i<=n;i++) d[i]=read();
-	for (int i=1;i<=n;i++) l[i]=read();
+int main(){
+	read(n);read(q);
+	for (int i=1;i<=n;++i) read(d[i]);
+	for (int i=1;i<=n;++i) read(l[i]);
 	while (q--){
-		int L=read(),R=read(),x=read();
-		int now=x,ans=x;
-		for (int i=L;i<=R;i++){
+		read(L);read(R);read(x);
+		now=x,ans=x;
+		for (int i=L;i<=R;++i){
+			if (l[i]<=x){now=x;continue;}
 			now=min(now+d[i],l[i]);
-			now=max(now,min(x+d[i],l[i]));
-			ans=max(ans,now);
+			if (now>ans) ans=now;
 		}
-		printf("%lld\n",ans);
+		printf("%d\n",ans);
 	}
 	return 0;
 }
