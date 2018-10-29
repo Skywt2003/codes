@@ -6,8 +6,6 @@
 #include<algorithm>
 #include<vector>
 
-#define max(x,y) ((x)<(y)?(y):(x))
-#define min(x,y) ((x)>(y)?(y):(x))
 using namespace std;
 
 const int maxn=40005;
