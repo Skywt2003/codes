@@ -18,8 +18,6 @@ inline int read(){
 }
 
 signed main(){
-	freopen("separate.in","r",stdin);
-	freopen("separate.out","w",stdout);
 	n=read();m=read();
 	if (m==1) swap(n,m);
 	for (int i=1;i<=m;i++) a[i]=read();
