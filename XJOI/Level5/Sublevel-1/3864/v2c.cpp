@@ -53,7 +53,7 @@ signed main(){
 			if (all_town[j].iscity) break;
 		}
 		for (int j=1;j<now.size()-1;++j){
-			double p=1.0/(double)j/(double)j+1;
+			double p=1.0/(double)j/(double)(j+1);
 			ans+=p*sqrt(get_distance(b[i],now[j]));
 		}
 		{
