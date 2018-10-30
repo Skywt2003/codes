@@ -1,15 +1,11 @@
-// #pragma GCC optimize(3)
-
 #include<cstdio>
 #include<cstring>
 #include<iostream>
 #include<algorithm>
 #include<vector>
 
-// #define int long long
 using namespace std;
 
-// const int INF=0x3f3f3f3f3f3f3f3f;
 const int INF=0x3f3f3f3f;
 
 struct matrix{
@@ -30,7 +26,6 @@ struct matrix{
 	inline void set_infi(int x,int y){
 		n=x;m=y;
 		memset(a,0x3f,sizeof(a));
-		// for (int i=0;i<min(n,m);i++) a[i][i]=0;
 	}
 
 	inline matrix operator *(matrix &b){
@@ -70,13 +65,9 @@ signed main(){
 		int len=read(),x=read(),y=read();
 		if (!id[x]) id[x]=++id[0];
 		if (!id[y]) id[y]=++id[0];
-		// if (x==y) continue;
 		now.a[id[x]][id[y]]=now.a[id[y]][id[x]]=min(now.a[id[x]][id[y]],len);
 	}
 	now=now^N;
-	// for (int i=1;i<100;i++)
-	// 	for (int j=1;j<100;j++) if ((id[i]) && (id[j]) && i!=j && ans.a[id[i]][id[j]]!=INF)
-	// 		printf("%lld to %lld = %lld\n",i,j,ans.a[id[i]][id[j]]);
 	printf("%d\n",now.a[id[S]][id[E]]);
 	return 0;
 }
