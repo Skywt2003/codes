@@ -67,8 +67,6 @@ namespace Graph{
 	}
 
 	inline bool check(int x){
-		printf("Start to check %lld\n",x);
-		for (int i=0;i<n;i++) printf((a[i]==0)?("con_x[%lld] = %lld\n"):("con_y[%lld] = %lld\n"),i,(a[i]==0)?con_x[i]:con_y[i]);
 		for (int i=0;i<n;i++) con_x_tmp[i]=con_x[i],con_y_tmp[i]=con_y[i];
 		now_block=x;
 		if (a[x]==0){
