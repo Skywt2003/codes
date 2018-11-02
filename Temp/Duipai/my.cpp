@@ -45,13 +45,25 @@ namespace Graph{
 	}
 
 	inline bool DFS(int x){
-		if (x==now_block) return false;
-		if (blocked[x]) return false;
+		if (x==now_block || blocked[x]) return false;
 		for (int i=lnk[x];i;i=nxt[i]) if ((!vis[son[i]])&&(son[i]!=now_block)&&(!blocked[son[i]])){
 			int t=son[i];vis[t]=true;
 			if ((con_y[t]==-1) || (DFS(con_y[t]))){
 				con_x[x]=t;
 				con_y[t]=x;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	inline bool VanDFS(int x){
+		if (x==now_block || blocked[x]) return false;
+		for (int i=lnk[x];i;i=nxt[i]) if ((!vis[son[i]])&&(son[i]!=now_block)&&(!blocked[son[i]])){
+			int t=son[i];vis[t]=true;
+			if ((con_x[t]==-1) || (VanDFS(con_x[t]))){
+				con_x[t]=x;
+				con_y[x]=t;
 				return true;
 			}
 		}
@@ -67,18 +79,18 @@ namespace Graph{
 	}
 
 	inline bool check(int x){
+		// printf("Start to check %lld\n",x);
+		// for (int i=0;i<n;i++) printf((a[i]==0)?("con_x[%lld] = %lld\n"):("con_y[%lld] = %lld\n"),i,(a[i]==0)?con_x[i]:con_y[i]);
 		for (int i=0;i<n;i++) con_x_tmp[i]=con_x[i],con_y_tmp[i]=con_y[i];
 		now_block=x;
-		if (a[x]==0){
-			for (int i=lnk[con_x[x]];i;i=nxt[i]) if (son[i]!=x){
-				memset(vis,0,sizeof(vis));
-				vis[con_x[x]]=true;
-				if (DFS(son[i])){
-					for (int j=0;j<n;j++) con_x[j]=con_x_tmp[j],con_y[j]=con_y_tmp[j];
-					return false;
-				}
+		if (a[x]==0){ // 需要用 VanDFS 寻找“反增广路”
+			memset(vis,0,sizeof(vis));
+			con_y[con_x[x]]=-1;
+			if (VanDFS(con_x[x])){
+				for (int i=0;i<n;i++) con_x[i]=con_x_tmp[i],con_y[i]=con_y_tmp[i];
+				return false;
 			}
-			con_y[con_x[x]]=-1;con_x[x]=-1;
+			con_x[x]=-1;
 			blocked[x]=true;
 			return true;
 		} else {
