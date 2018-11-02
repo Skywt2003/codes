@@ -20,21 +20,24 @@ int T,n,a[maxn];
 int need[maxn][2];
 
 namespace math{
-	int inv[maxk];
 	int fact[maxk];
-
-	inline void build_inverse(){
-		inv[1]=1;
-		for (int i=2;i<=N;i++) inv[i]=(tt-(tt/i))*inv[tt%i]%tt;
-	}
 
 	inline void build_fact(){
 		fact[0]=1;
 		for (int i=1;i<=N;i++) fact[i]=fact[i-1]*i%tt;
 	}
 
+	inline int qsm(int a,int b){
+		int ret=1,w=a%tt;
+		while (b){
+			if (b&1) ret=ret*w%tt;
+			w=w*w%tt;b>>=1;
+		}
+		return ret;
+	}
+
 	inline int C(int x,int y){
-		return fact[x]*inv[fact[y]]%tt*inv[fact[x-y]]%tt;
+		return fact[x]*qsm(fact[y],tt-2)%tt*qsm(fact[x-y],tt-2)%tt;
 	}
 }
 
@@ -44,7 +47,6 @@ inline void debug_math(int x,int y){
 
 signed main(){
 	T=read();
-	math::build_inverse();
 	math::build_fact();
 	while (T--){
 		n=read();
