@@ -15,7 +15,7 @@ inline int read(){
 }
 
 const int tt=998244353;
-const int maxn=1005,maxk=1e6+5,N=1e6;
+const int maxn=2005,maxk=1e6+5,N=1e6;
 int T,n,a[maxn];
 int need[maxn][2];
 
@@ -37,6 +37,7 @@ namespace math{
 	}
 
 	inline int C(int x,int y){
+		if (x<y || x<0 || y<0) return 1;
 		return fact[x]*qsm(fact[y],tt-2)%tt*qsm(fact[x-y],tt-2)%tt;
 	}
 }
@@ -53,21 +54,27 @@ signed main(){
 		int sum=0;
 		for (int i=1;i<=n;i++) a[i]=read(),sum+=a[i];
 		int std_num=sum/n;
+		if (n==0){printf("0\n");continue;}
+		memset(need,0,sizeof(need));
 
-		for (int i=1;i<=n;i++) need[i][0]=need[i-1][0]+((std_num>a[i])?std_num-a[i]:0);
-		for (int i=n;i>=1;i--) need[i][1]=need[i+1][1]+((std_num>a[i])?std_num-a[i]:0);
-
+		for (int i=n;i>=1;i--) need[i][1]=need[i+1][1]+std_num-a[i];
 		int ans=1;
 		for (int i=1;i<n;i++){
-			if (a[i]>std_num){
+			if (a[i]>std_num && need[i+1][1]>=0){
 				int delta=min(a[i]-std_num,need[i+1][1]);
+				// int delta=need[i+1][1];
 				ans=ans*math::C(a[i],delta)%tt;
 				a[i+1]+=delta;a[i]-=delta;
 			}
 		}
+
+		// for (int i=1;i<=n;i++) printf("%lld ",a[i]);printf("\n");
+
+		for (int i=1;i<=n;i++) need[i][0]=need[i-1][0]+std_num-a[i];
 		for (int i=n;i>1;i--){
-			if (a[i]>std_num){
+			if (a[i]>std_num && need[i-1][0]>=0){
 				int delta=min(a[i]-std_num,need[i-1][0]);
+				// int delta=need[i-1][0];
 				ans=ans*math::C(a[i],delta)%tt;
 				a[i-1]+=delta;a[i]-=delta;
 			}
