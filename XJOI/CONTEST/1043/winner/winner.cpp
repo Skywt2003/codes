@@ -1,6 +1,7 @@
 #include<cstdio>
 #include<cstring>
 #include<iostream>
+#define int long long
 using namespace std;
 
 int n,m;
@@ -12,8 +13,12 @@ inline int read(){
 	return ret*f;
 }
 
+char s[105];
+
 signed main(){
-	n=read();m=read();
-	printf("%.6lf\n",1.0*n*(n-1)/2/m);
+	n=read();m=read();n=n*(n-1)/2;
+	printf("%lld",n/m);n%=m;
+	sprintf(s,"%.6lf",(double)n/m);
+	printf("%s",s+1);
 	return 0;
 }
