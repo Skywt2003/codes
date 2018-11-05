@@ -15,11 +15,13 @@ const int maxn=1e5+5;
 #define mid (((tr-tl)>>1)+tl)
 
 namespace SegmentTree{
-	int tree[maxn*4],tag[maxn*4];
+	int tree[maxn*4];
+    int tag_add[maxn*4],tag_mul[maxn*4];
 
 	inline void clear(){
 		memset(tree,0,sizeof(tree));
-		memset(tag,0,sizeof(tag));
+		memset(tag_add,0,sizeof(tag_add));
+        memset(tag_mul,0,sizeof(tag_mul));
 	}
 
 	inline void build_tree(int tl,int tr,int p,int* &a){
@@ -34,16 +36,17 @@ namespace SegmentTree{
 	}
 
 	inline void push_down(int tl,int tr,int p){
-		tree[ls]+=tag[p]*(mid-tl+1);
-		tree[rs]+=tag[p]*(tr-mid);
-		tag[ls]+=tag[p];tag[rs]+=tag[p];
-		tag[p]=0;
+		tree[ls]=tree[ls]*tag_mul[p]+tag_add[p];
+		tree[rs]=tree[rs]*tag_mul[p]+tag_add[p];
+        tag_mul[ls]*=tag_mul[p];tag_mul[rs]*=tag_mul[p];
+		tag_add[ls]+=tag_add[p];tag_add[rs]+=tag_add[p];
+		tag_add[p]=0;
 	}
 
 	inline void update_add(int sl,int sr,int tl,int tr,int p,int delta){
 		if (sl<=tl && tr<=sr){
 			tree[p]+=delta;
-			tag[p]+=delta;
+			tag_add[p]+=delta*(tr-tl+1);
 			return;
 		}
 		push_down(tl,tr,p);
@@ -55,7 +58,8 @@ namespace SegmentTree{
 	inline void update_mul(int sl,int sr,int tl,int tr,int p,int delta){
 		if (sl<=tl && tr<=sr){
 			tree[p]+=delta;
-			tag[p]+=delta;
+			tag_add[p]*=delta;
+            tag_mul[p]*=delta;
 			return;
 		}
 		push_down(tl,tr,p);
@@ -74,5 +78,5 @@ namespace SegmentTree{
 }
 
 signed main(){
-
+    
 }

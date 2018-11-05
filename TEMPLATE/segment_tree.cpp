@@ -53,5 +53,6 @@ namespace SegmentTree{
 		int ret=0;
 		if (sl  <=mid) ret+=query(sl,sr,tl,mid  ,ls);
 		if (mid+1<=sr) ret+=query(sl,sr,mid+1,tr,rs);
+		return ret;
 	}
 }
