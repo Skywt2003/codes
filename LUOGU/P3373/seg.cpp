@@ -20,6 +20,12 @@ namespace SegmentTree{
 	int tree[maxn*4];
 	int tag_add[maxn*4],tag_mul[maxn*4];
 
+	inline void init(int n){
+		memset(tree,0,sizeof(tree));
+		memset(tag_add,0,sizeof(tag_add));
+		for (int i=1;i<=4*n;i++) tag_mul[i]=1;
+	}
+
 	inline void build_tree(int tl,int tr,int p,int a[]){
 		if (tl==tr){
 			tree[p]=a[tl]%tt;
@@ -35,10 +41,10 @@ namespace SegmentTree{
 	inline void push_down(int tl,int tr,int p){
 		tree[ls]=(tree[ls]*tag_mul[p]%tt+tag_add[p]*(mid-tl+1)%tt)%tt;
 		tree[rs]=(tree[rs]*tag_mul[p]%tt+tag_add[p]*(tr-mid  )%tt)%tt;
+		tag_add[ls]=(tag_add[ls]*tag_mul[p]+tag_add[p])%tt;
+		tag_add[rs]=(tag_add[rs]*tag_mul[p]+tag_add[p])%tt;
 		tag_mul[ls]=tag_mul[ls]*tag_mul[p]%tt;
 		tag_mul[rs]=tag_mul[rs]*tag_mul[p]%tt;
-		tag_add[ls]=(tag_add[ls]+tag_add[p])%tt;
-		tag_add[rs]=(tag_add[rs]+tag_add[p])%tt;
 		tag_mul[p]=1;tag_add[p]=0;
 	}
 
@@ -68,7 +74,7 @@ namespace SegmentTree{
 	}
 
 	inline int query(int sl,int sr,int tl,int tr,int p){
-		if (sl<=tl && tr<=sr) return tree[p];
+		if (sl<=tl && tr<=sr) return tree[p]%tt;
 		push_down(tl,tr,p);
 		int ret=0;
 		if (sl  <=mid) ret=(ret+query(sl,sr,tl,mid  ,ls))%tt;
@@ -89,7 +95,7 @@ int a[maxn];
 
 signed main(){
 	n=read();m=read();tt=read();
-	for (int i=1;i<=n;i++) a[i]=read();
+	for (int i=1;i<=n;i++) a[i]=read()%tt;
 	SegmentTree::build_tree(1,n,1,a);
 
 	for (int i=1;i<=m;i++){
@@ -102,7 +108,7 @@ signed main(){
 			SegmentTree::update_add(x,y,1,n,1,k%tt);
 		} else if (opt==3){
 			int x=read(),y=read();
-			printf("%lld\n",SegmentTree::query(x,y,1,n,1));
+			printf("%lld\n",SegmentTree::query(x,y,1,n,1)%tt);
 		}
 	}
 
