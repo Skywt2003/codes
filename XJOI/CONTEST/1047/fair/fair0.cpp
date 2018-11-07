@@ -6,13 +6,14 @@
 #define int long long
 
 using namespace std;
-const int maxn=20,maxs=(1<<14)+10;
+const int maxn=20,maxs=(1<<17)+10;
 const int tt=998244353;
 
 int n,m,s;
 int p[maxn][maxn];
-
-int f[maxn][maxs];
+int bet[maxs],inv[maxs];
+int f[maxs];
+int ans=0;
 
 inline int read(){
 	int ret=0,f=1;char ch=getchar();
@@ -21,57 +22,84 @@ inline int read(){
 	return ret*f;
 }
 
-inline int qsm(int a,int b){
-	int ret=1,w=a%tt;
-	while (b){
-		if (b&1) ret=ret*w%tt;
-		w=w*w%tt;b>>=1;
+namespace math{
+	inline int qsm(int a,int b){
+		int ret=1,w=a%tt;
+		while (b){
+			if (b&1) ret=ret*w%tt;
+			w=w*w%tt;b>>=1;
+		}
+		return ret;
 	}
-	return ret;
+
+	inline int get_inverse(int x){
+		return qsm(x,tt-2);
+	}
+
+	inline int lowbit(int x){
+		return x&(-x);
+	}
 }
 
-inline void plus_mod(int &x,int y){
+inline void add_mod(int &x,int y){
 	x=(x+y)%tt;
 }
 
-inline void mult_mod(int &x,int y){
+inline void sub_mod(int &x,int y){
+	x=(x-y+tt)%tt;
+}
+
+inline void mul_mod(int &x,int y){
 	x=(x*y)%tt;
 }
 
+inline void build_bet(){
+	for (int k=0;k<s;k++){
+		bet[k]=1;
+		for (int i=0;i<n;i++) if (k&(1<<i)){
+			for (int j=i+1;j<n;j++) if (k&(1<<j)){
+				mul_mod(bet[k],p[i][j]);
+			}
+		}
+		inv[k]=math::get_inverse(bet[k]);
+	}
+}
+
 signed main(){
-	freopen("fair.in","r",stdin);
-	freopen("fair.out","w",stdout);
 	n=read();m=read();s=1<<n;
 
-	for (int i=0;i<n;i++)
-		for (int j=0;j<n;j++)
-			if (i!=j) p[i][j]=1; else p[i][j]=0;
-	for (int i=0;i<n;i++) f[1][1<<i]=1;
+	for (int i=0;i<n;i++){
+		for (int j=0;j<n;j++) p[i][j]=1;
+	}
 
 	for (int i=0;i<m;i++){
 		int x=read()-1,y=read()-1;
 		p[x][y]=p[y][x]=read();
 	}
 
-	for (int j=1;j<s;j++){
-		for (int i=1;i<=n;i++) if (f[i][j]){
-			for (int t=0;t<n;t++) if (j&(1<<t)){
-				for (int k=0;k<n;k++) if ((j&(1<<k))==false){
-					plus_mod(f[i][j+(1<<k)],(1-p[t][k]+tt)%tt*f[i][j]%tt);
-					mult_mod(f[i+1][j+(1<<k)],p[t][k]*f[i][j]%tt);
-				}
+	build_bet();
+
+	f[0]=inv[0]=1;
+	for (int k=1;k<s;k++){
+		f[k]=1;
+
+		int w=k^math::lowbit(k);
+		for(int ss=(w-1)&w;~ss;ss=(ss-1)&w){
+			int t=ss|math::lowbit(k);
+			sub_mod(f[k],f[t]*bet[k]%tt*inv[t]%tt*inv[k-t]%tt);
+			if (!ss) break;
+		}
+
+		int tmp=f[k];
+		for (int i=0;i<n;i++) if (k&(1<<i)){
+			for (int j=0;j<n;j++) if (!(k&(1<<j))){
+				mul_mod(tmp,p[i][j]);
 			}
 		}
+		add_mod(ans,tmp);
 	}
 
-	for (int i=1;i<=n;i++){
-		for (int j=0;j<s;j++){
-			printf("F[%lld][%lld] = %lld\n",i,j,f[i][j]);
-		}
-	}
+	cout<<ans<<endl;
 
-	int ans=0;
-	for (int i=1;i<=n;i++) plus_mod(ans,i*f[i][s-1]%tt);
-	printf("%lld\n",ans);
 	return 0;
 }
