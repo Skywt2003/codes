@@ -42,8 +42,6 @@ inline int inv(int x){
 }
 
 signed main(){
-	freopen("fair.in","r",stdin);
-	freopen("fair.out","w",stdout);
 	// n=read();m=read();
 
 	// for (int i=0;i<n;i++)

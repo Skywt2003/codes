@@ -24,8 +24,6 @@ inline bool cmp(pair<int,int> aa,pair<int,int> bb){
 }
 
 signed main(){
-	freopen("strategy.in","r",stdin);
-	freopen("strategy.out","w",stdout);
 	n=read();k=read();
 	sub.clear();
 	for (int i=1;i<=n;i++) a[i]=read(),b[i]=read(),sum+=b[i],sub.push_back(make_pair(i,a[i]-b[i]));

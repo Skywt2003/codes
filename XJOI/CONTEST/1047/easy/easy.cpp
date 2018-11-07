@@ -52,8 +52,6 @@ inline int get_lca(int x,int y){
 }
 
 signed main(){
-	freopen("easy.in","r",stdin);
-	freopen("easy.out","w",stdout);
 	n=read();
 	for (int i=1;i<n;i++){
 		int x=read(),y=read();
