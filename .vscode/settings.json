@@ -58,5 +58,6 @@
 		"typeinfo": "cpp",
 		"utility": "cpp",
 		"valarray": "cpp"
-	}
+	},
+	"C_Cpp.errorSquiggles": "Disabled"
 }
