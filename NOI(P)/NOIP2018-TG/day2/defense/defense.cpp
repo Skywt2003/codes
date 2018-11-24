@@ -55,8 +55,6 @@ inline void build(int step,int sum){
 }
 
 int main(){
-	freopen("defense.in","r",stdin);
-	freopen("defense.out","w",stdout);
 	n=read();m=read();
 	char opt=read_char();int xx=read();
 	for (int i=1;i<=n;i++) p[i]=read();

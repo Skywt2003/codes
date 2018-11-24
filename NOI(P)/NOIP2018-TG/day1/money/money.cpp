@@ -15,21 +15,20 @@ inline int read(){
 const int maxn=105,maxv=25005;
 int T,n,ans,allv,a[maxn];
 bool f[maxv];
+bool vis[maxn];
 
 int main(){
-	freopen("money.in","r",stdin);
-	freopen("money.out","w",stdout);
 	T=read();
 	while (T--){
+		memset(vis,0,sizeof(vis));
 		n=ans=read();allv=0;
 		for (int i=1;i<=n;i++) a[i]=read(),allv=max(allv,a[i]);
-		for (int k=1;k<=n;k++){
-			memset(f,0,sizeof(f));
-			f[0]=true;
-			for (int i=1;i<=n;i++) if (i!=k){
-				for (int j=a[i];j<=a[k];j++) f[j]|=f[j-a[i]];
-			}
-			if (f[a[k]]) ans--;
+		sort(a+1,a+1+n);
+		memset(f,0,sizeof(f));
+		f[0]=true;
+		for (int i=1;i<=n;i++){
+			if (f[a[i]]) ans--;
+			for (int j=a[i];j<=allv;j++) f[j]|=f[j-a[i]];
 		}
 		printf("%d\n",ans);
 	}

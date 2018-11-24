@@ -44,8 +44,6 @@ inline bool smaller(vector<int> &aa,vector<int> &bb){
 }
 
 int main(){
-	freopen("travel.in","r",stdin);
-	freopen("travel.out","w",stdout);
 	n=read();m=read();
 	for (int i=1;i<=m;i++){
 		int x=read(),y=read();

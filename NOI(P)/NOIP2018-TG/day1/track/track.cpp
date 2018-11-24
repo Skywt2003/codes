@@ -105,8 +105,6 @@ namespace Subtask3{ // For ai=1 (Ju Flower Graph) / ex 5pts
 }
 
 int main(){
-	freopen("track.in","r",stdin);
-	freopen("track.out","w",stdout);
 	n=read();m=read();
 	for (int i=1;i<n;i++){
 		int x=read(),y=read(),z=read();

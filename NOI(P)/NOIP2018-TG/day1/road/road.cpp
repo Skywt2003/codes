@@ -15,8 +15,6 @@ inline int read(){
 	return ret*f;
 }
 int main(){
-	freopen("road.in","r",stdin);
-	freopen("road.out","w",stdout);
 	n=read();
 	for (int i=1;i<=n;i++){
 		a[i]=read();
