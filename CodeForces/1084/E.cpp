@@ -21,22 +21,22 @@ inline int read(){
 }
 
 signed main(){
-    n=read();k=read();
-    cin>>s>>t;
-    for (int i=0;i<n;i++) if (s[i]==t[i]) ans++; else {st=i;break;}
-    if (st==-1){
-        printf("%lld\n",ans);
-        return 0;
-    }
-    now=1;
-    for (int i=st;i<n;i++){
-        int lst=now;
-        now=now*2 - ('b'-t[i]) - (s[i]-'a');
-        if (now>k){
-            ans+=k*(n-i);
-            break;
-        } else ans+=now;
-    }
-    printf("%lld\n",ans);
-    return 0;
+	n=read();k=read();
+	cin>>s>>t;
+	for (int i=0;i<n;i++) if (s[i]==t[i]) ans++; else {st=i;break;}
+	if (st==-1){
+		printf("%lld\n",ans);
+		return 0;
+	}
+	now=1;
+	for (int i=st;i<n;i++){
+		int lst=now;
+		now=now*2 - ('b'-t[i]) - (s[i]-'a');
+		if (now>k){
+			ans+=k*(n-i);
+			break;
+		} else ans+=now;
+	}
+	printf("%lld\n",ans);
+	return 0;
 }
