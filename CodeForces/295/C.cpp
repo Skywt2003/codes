@@ -16,25 +16,36 @@ inline int read(){
 	return ret*f;
 }
 
-const int maxn=105,maxk=5005;
+const int maxn=55,maxk=5005;
 
 int n,k,num50=0,num100=0;
-int f[maxn][maxn][2*maxn];
-int inv[maxn],fac[maxn];
+int f[maxn][maxn][4*maxn][2];
+int fac[4*maxn],inv[4*maxn];
 
 const int tt=1000000007;
 
+inline int qsm(int a,int b){
+	int ret=1,w=a;
+	while (b){
+		if (b&1) ret=ret*w%tt;
+		w=w*w%tt;b>>=1;
+	}
+	return ret;
+}
+
 inline void build_c(){
-	inv[0]=1;inv[1]=1;
-	for (int i=2;i<=n*2;i++) inv[i]=tt-tt/i*inv[tt%i]%tt;
 	fac[0]=1;
-	for (int i=1;i<=n*2;i++) fac[i]=fac[i-1]*i%tt;
+	for (int i=1;i<=n*4;i++) fac[i]=fac[i-1]*i%tt;
+	inv[4*n]=qsm(fac[4*n],tt-2);
+	for(int i=4*n-1;i>=0;i--) inv[i]=inv[i+1]*(i+1)%tt;
 }
 
 inline int C(int x,int y){
-	if (y==1) return x;
-	// printf("C (%lld, %lld) = %lld\n",x,y,fac[x]*inv[y]%tt*inv[x-y]%tt);
 	return fac[x]*inv[y]%tt*inv[x-y]%tt;
+}
+
+inline void plus_mod(int &x,int y){
+	x=(x+y)%tt;
 }
 
 signed main(){
@@ -53,25 +64,24 @@ signed main(){
 		if (k<100 && num100>0) {printf("-1\n0\n");return 0;}
 	}
 
-	memset(f,0,sizeof(f));
-	f[num50][num100][0]=1;
-	for (int kk=0;kk<=2*n;kk++){
-		if (f[1][0][kk]){
-			printf("%lld\n%lld\n",kk*2-1,f[1][0][kk]*inv[num50]%tt);
-			return 0;
-		}
-		if (f[0][1][kk]){
-			printf("%lld\n%lld\n",kk*2-1,f[0][1][kk]*inv[num100]%tt);
-			return 0;
-		}
+	f[num50][num100][0][1]=1;
+	for (int kk=1;kk<=4*n;kk++){
 		for (int i=0;i<=num50;i++)
-		for (int j=0;j<=num100;j++) if (f[i][j][kk])
-		for (int w=0;w<=j;w++){
-			int t=min((k-w*100)/50,i);
-			if (k>=50 ) for (int bck=1;bck<=min(num50-i+t,k/50);bck++)
-				f[i-t+bck][j-w][kk+1]=(f[i-t+bck][j-w][kk+1]+f[i][j][kk]*C(i,t)%tt*C(j,w)%tt*C(num50-i+t,bck)%tt)%tt;
-			if (k>=100) for (int bck=1;bck<=min(num100-j+w,k/100);bck++)
-				f[i-t][j-w+bck][kk+1]=(f[i-t][j-w+bck][kk+1]+f[i][j][kk]*C(i,t)%tt*C(j,w)%tt*C(num100-j+w,bck)%tt)%tt;
+		for (int j=0;j<=num100;j++) if (i!=0 || j!=0){
+			for (int t=0;t<=i;t++)
+			for (int w=0;w<=j;w++){
+				if (w*100+t*50>k || w+t==0) continue;
+				plus_mod(f[i-t][j-w][kk][0],f[i][j][kk-1][1]*C(i,t)%tt*C(j,w)%tt);
+			}
+			for (int t=0;t<=num50-i;t++)
+			for (int w=0;w<=num100-j;w++){
+				if (w*100+t*50>k || w+t==0) continue;
+				plus_mod(f[i+t][j+w][kk][1],f[i][j][kk-1][0]*C(num50-i,t)%tt*C(num100-j,w)%tt);
+			}
+		}
+		if (f[0][0][kk][0]){
+			printf("%lld\n%lld\n",kk,f[0][0][kk][0]);
+			return 0;
 		}
 	}
 	printf("-1\n0\n");
