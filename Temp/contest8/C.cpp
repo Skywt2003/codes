@@ -36,18 +36,27 @@ inline double min(double x,double y){
 	return x<y?x:y;
 }
 
-double get_dist(int x1,int y1,int x2,int y2){
+double get_dist(double x1,double y1,double x2,double y2){
 	return sqrt(sqr(x1-x2)+sqr(y1-y2));
 }
 
 double get_line_dist(double x,double y,double x1,double y1,double x2,double y2){
 	if (x1>x2) swap(x1,x2),swap(y1,y2);
-	double k1=(y1-y2)/(x1-x2);
-	double b1=y1-k1*x1;
-	double k2=k1/(-1.0);
-	double b2=y-k1*x;
-	double xs=(k2-k1)/(b1-b2);
-	double ys=k1*xs+b1;
+	double xs,ys;
+	if (y1==y2){
+		ys=y1;
+		xs=x;
+	} else if (x1==x2){
+		xs=x1;
+		ys=y;
+	} else {
+		double k1=(y1-y2)/(x1-x2);
+		double b1=y1-k1*x1;
+		double k2=((double)-1.0)/k1;
+		double b2=y-k2*x;
+		xs=(b2-b1)/(k1-k2);
+		ys=k1*xs+b1;
+	}
 	if ((xs>=x1-eps && xs<=x2+eps && ys>=y1-eps && ys<=y2+eps) || 
 	    (xs>=x1-eps && xs<=x2+eps && ys<=y1+eps && ys>=y2-eps)) return get_dist(x,y,xs,ys); else return INF;
 }
