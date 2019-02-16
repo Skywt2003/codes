@@ -14,8 +14,8 @@ inline int read(){
 	return ret*f;
 }
 
-const int maxn=1e5+5,tt=1000000007;
-int n,a[maxn],f[maxn];
+const int maxn=1e6+5,tt=1000000007;
+int n,mx,a[maxn],f[maxn];
 
 namespace BIT{
 	int a[maxn];
@@ -23,7 +23,7 @@ namespace BIT{
 	int lowbit(int x) {return x&(-x);};
 
 	void update(int x,int delta){
-		while (x<=n) a[x]=(a[x]+delta)%tt,x+=lowbit(x);
+		while (x<=mx) a[x]=(a[x]+delta+tt)%tt,x+=lowbit(x);
 	}
 	int query(int x){
 		int ret=0;
@@ -32,18 +32,15 @@ namespace BIT{
 	}
 }
 
-
 signed main(){
 	n=read();
-	for (int i=1;i<=n;i++) a[i]=read()%tt;
-	f[1]=a[1];
-	BIT::update(a[1],f[1]);
-	for (int i=2;i<=n;i++){
-		f[i]=(BIT::query(a[i])*a[i]%tt+a[i])%tt;
-		BIT::update(a[i],f[i]);
+	for (int i=1;i<=n;i++) a[i]=read(),mx=max(mx,a[i]);
+	for (int i=1;i<=n;i++){
+		int x=BIT::query(a[i]);
+		BIT::update(a[i],-f[a[i]]);
+		f[a[i]]=(x*a[i]%tt+a[i])%tt;
+		BIT::update(a[i],f[a[i]]);
 	}
-	int ans=0;
-	for (int i=1;i<=n;i++) ans=(ans+f[i])%tt;
-	printf("%lld\n",ans);
+	printf("%lld\n",BIT::query(mx));
 	return 0;
 }
