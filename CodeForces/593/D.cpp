@@ -105,6 +105,7 @@ signed main(){
 		if (opt==1){
 			int x=read(),y=read(),num=read();
 			int l=get_lca(x,y),now=1;
+			printf("LCA(%lld,%lld) = %lld\n",x,y,l);
 			while (x!=l){
 				int tmp=-1;
 				if (top[x]!=x){
