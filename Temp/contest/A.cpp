@@ -15,5 +15,13 @@ inline int read(){
 }
 
 signed main(){
-	
+	int k=read(),a=read(),b=read(),v=read();
+	int num=0,ans=0;
+	while (a>0){
+		num=1;
+		while (b>0 && num<k) if (num<k) num++,b--;
+		a-=num*v;ans++;
+	}
+	printf("%lld\n",ans);
+	return 0;
 }
