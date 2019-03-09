@@ -4,6 +4,7 @@
 #include<vector>
 #include<algorithm>
 #include<map>
+#include<cmath>
 
 #define int long long
 using namespace std;
@@ -85,15 +86,16 @@ struct matrix{
 };
 
 double x[maxn],y[maxn];
-matrix A[maxn];
 
 map<pair<double,double> , bool> used;
 int line_cnt=0;
 struct line{
 	double k,b;
 	vector<int> dots;
-}l[maxn*maxn];
+}lines[maxn*maxn];
 vector<int> pass_lines[maxn];
+
+matrix A[maxn];
 
 void build_A1(){
 	for (int i=1;i<=n;i++){
@@ -102,19 +104,31 @@ void build_A1(){
 			if (!used[make_pair(k,b)]) used[make_pair(k,b)]=true; else continue;
 
 			line_cnt++;
-			l[line_cnt].k=k;l[line_cnt].b=b;
-			for (int t=1;t<=n;t++) if (k*x[t]+b==y[t]) l[line_cnt].dots.push_back(t),pass_lines[t].push_back(line_cnt);
+			lines[line_cnt].k=k;lines[line_cnt].b=b;
+			for (int t=1;t<=n;t++) if (k*x[t]+b==y[t]) lines[line_cnt].dots.push_back(t),pass_lines[t].push_back(line_cnt);
 		}
 	}
+	for (int i=1;i<=n;i++) sort(pass_lines[i].begin(),pass_lines[i].end());
 	for (int i=1;i<=n;i++){
-		for (int j=0;j<(int)pass_lines[i].size();j++){
-			
+		for (int j=1;j<=n;j++){
+			int ii=0,jj=0;
+			while (ii<(int)pass_lines[i].size() && jj<(int)pass_lines[j].size()){
+				if (pass_lines[i][ii]<pass_lines[j][jj]) ii++; else
+				if (pass_lines[i][ii]>pass_lines[j][jj]) jj++; else {
+					int nowl=pass_lines[i][ii];
+					A[0].a[i][j]+=1.0/(int)lines[nowl].dots.size();
+					A[0].a[j][i]+=1.0/(int)lines[nowl].dots.size();
+					ii++;jj++;
+				}
+			}
 		}
 	}
 }
 
 void build_A2k(){
-
+	for (int i=2;i<=log2(10001);i++){
+		
+	}
 }
 
 matrix get_mul(int x){
