@@ -1,17 +1,14 @@
-#pragma GCC optmize("O2")
 #include<cstdio>
 #include<cstring>
 #include<iostream>
 #include<algorithm>
 #include<vector>
-#include<map>
-#include<set>
 
 using namespace std;
 #define int long long
 
 const int maxn=65;
-const int maxx=20005;
+const int maxx=40005,zero=20001;
 
 inline int read(){
 	int ret=0,f=1;char ch=getchar();
@@ -20,14 +17,14 @@ inline int read(){
 	return ret*f;
 }
 
-int n,m;
+int n,m,INF;
 int x[maxn],y[maxn];
 int ans=0;
 
-map<double,pair<int,int> > s;
-map<double,pair<int,int> >::iterator it,it2;
+pair<int,int> s[maxx]; // mid 扩展两倍
+int nxt[maxx];
 
-inline int my_popcount(int x){
+int pop_count(int x){
 	int ret=0;
 	while (x) ret+=x&1,x>>=1;
 	return ret;
@@ -38,19 +35,27 @@ signed main(){
 	for (int i=0;i<n;i++) x[i]=read();
 	for (int i=0;i<m;i++) y[i]=read();
 	sort(x,x+n);sort(y,y+m);
+	// for (int i=0;i<n;i++) printf("%lld ",x[i]);printf("\n");
+	// for (int i=0;i<m;i++) printf("%lld ",y[i]);printf("\n");
 	for (int i=0;i<n;i++){
 		for (int j=0;j<m;j++){
-			double mid=(1.0*x[i]+1.0*y[j])/2.0;
-			s[mid].first +=1LL<<i;
-			s[mid].second+=1LL<<j;
+			int mid=(x[i]+y[j])+zero;
+			if ((s[mid].first&(1LL<<i))==0)  s[mid].first +=1LL<<i;
+			if ((s[mid].second&(1LL<<j))==0) s[mid].second+=1LL<<j;
 		}
 	}
-	for (it=s.begin();it!=s.end();it++){
-		for (it2=it;it2!=s.end();it2++) if (it!=it2){
-			int num1=(*it).second.first  | (*it2).second.first;
-			int num2=(*it).second.second | (*it2).second.second;
-			ans=max(ans,(int)__builtin_popcountll(num1)+__builtin_popcountll(num2));
-			// ans=max(ans,my_popcount(num1)+my_popcount(num2));
+	memset(nxt,63,sizeof(nxt));
+	INF=nxt[0];
+	int st=INF,lst=INF;
+	for (int i=-20000;i<=20000;i++) if (s[i+zero].first!=0){
+		if (st==INF) st=i+zero,lst=i; else nxt[lst+zero]=i+zero,lst=i;
+	}
+	for (int i=st;i!=INF;i=nxt[i]){
+		for (int j=st;j!=INF;j=nxt[j]){
+			int num1=s[i].first  | s[j].first;
+			int num2=s[i].second | s[j].second;
+			// ans=max(ans,(int)__builtin_popcountll(num1)+__builtin_popcountll(num2));
+			ans=max(ans,(int)pop_count(num1)+(int)pop_count(num2));
 		}
 	}
 	printf("%lld\n",ans);
