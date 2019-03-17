@@ -16,7 +16,7 @@ inline int read(){
 }
 
 const int maxn=55;
-const double eps=1e-7,INF=1.0e9;
+const double eps=1e-5,INF=1.0e9;
 int n;
 double ans=-1.0;
 double f[maxn][maxn][maxn];
@@ -30,7 +30,7 @@ bool check(double now){
 	f[0][0][0]=0.0;
 	for (int i=1;i<=n;i++)
 	for (int j=0;j<=i;j++)
-	for (int k=0;k<=i;k++){
+	for (int k=0;k<=i;k++) if (f[i-1][j][k]!=INF){
 		double delta=(double)tasks[i].first-now*(double)tasks[i].second;
 		if (tasks[i-1].first==tasks[i].first || i==1){
 			f[i][j][k]=min(f[i][j][k],f[i-1][j][k]+delta);
@@ -57,8 +57,9 @@ signed main(){
 	double L=0.0001,R=1.0e8;
 	while (L<=R){
 		double mid=(L+R)/2.0;
-		if (check(mid)) ans=mid,R=mid-eps; else L=mid+eps;
+		if (check(mid)) R=mid-eps; else ans=mid,L=mid+eps;
 	}
-	printf("%lld\n",(int)(ans*1000));
+	// printf("%.16f\n",ans);
+	printf("%lld\n",(int)ceil(ans*1000.0));
 	return 0;
 }
