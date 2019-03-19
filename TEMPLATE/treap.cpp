@@ -1,151 +1,115 @@
-//https://blog.csdn.net/acdreamers/article/details/11309971
+#include<bits/stdc++.h>
 
-#include <iostream>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
 using namespace std;
-struct Treap
-{
-    int size;
-    int key, fix;
-    Treap *ch[2];
-    Treap(int key)
-    {
-        size=1;
-        fix=rand();
-        this->key=key;
-        ch[0]=ch[1]=NULL;
-    }
-    int compare(int x) const
-    {
-        if(x==key) return -1;
-        return x<key? 0:1;
-    }
-    void Maintain()
-    {
-        size=1;
-        if(ch[0]!=NULL) size+=ch[0]->size;
-        if(ch[1]!=NULL) size+=ch[1]->size;
-    }
-};
-void Rotate(Treap* &t, int d)
-{
-    Treap *k=t->ch[d^1];
-    t->ch[d^1]=k->ch[d];
-    k->ch[d]=t;
-    t->Maintain();  
-    k->Maintain();
-    t=k;
-}
-void Insert(Treap* &t, int x)
-{
-    if(t==NULL) t=new Treap(x);
-    else
-    {
-        int d=x < t->key ? 0 : 1;  
-        Insert(t->ch[d], x);
-        if(t->ch[d]->fix > t->fix)
-            Rotate(t, d^1);
-    }
-    t->Maintain();
-}
-void Delete(Treap* &t, int x)
-{
-    int d=t->compare(x);
-    if(d==-1)
-    {
-        Treap *tmp=t;
-        if(t->ch[0]==NULL)
-        {
-            t=t->ch[1];
-            delete tmp;
-            tmp=NULL;
-        }
-        else if(t->ch[1]==NULL)
-        {
-            t=t->ch[0];
-            delete tmp;
-            tmp=NULL;
-        }
-        else
-        {
-            int k=t->ch[0]->fix > t->ch[1]->fix ? 1:0;
-            Rotate(t, k);
-            Delete(t->ch[k], x);
-        }
-    }
-    else Delete(t->ch[d], x);
-    if(t!=NULL) t->Maintain();
-}
-bool Find(Treap *t, int x)
-{
-    while(t!=NULL)
-    {
-        int d=t->compare(x);
-        if(d==-1) return true;
-        t=t->ch[d];
-    }
-    return false;
-}
-int Kth(Treap *t, int k)
-{
-    if(t==NULL||k<=0||k>t->size)
-        return -1;
-    if(t->ch[0]==NULL&&k==1)
-        return t->key;
-    if(t->ch[0]==NULL)
-        return Kth(t->ch[1], k-1);
-    if(t->ch[0]->size>=k)
-        return Kth(t->ch[0], k);
-    if(t->ch[0]->size+1==k)
-        return t->key;
-    return Kth(t->ch[1], k-1-t->ch[0]->size);
-}
-int Rank(Treap *t, int x)
-{
-    int r;
-    if(t->ch[0]==NULL) r=0;
-    else  r=t->ch[0]->size;
-    if(x==t->key) return r+1;
-    if(x<t->key)
-        return Rank(t->ch[0], x);
-    return r+1+Rank(t->ch[1], x);
-}
-void DeleteTreap(Treap* &t)
-{
-    if(t==NULL) return;
-    if(t->ch[0]!=NULL) DeleteTreap(t->ch[0]);
-    if(t->ch[1]!=NULL) DeleteTreap(t->ch[1]);
-    delete t;
-    t=NULL;
-}
-void Print(Treap *t)
-{
-    if(t==NULL) return;
-    Print(t->ch[0]);
-    cout<<t->key<<endl;
-    Print(t->ch[1]);
-}
-int val[1000005];
-int main()
-{
-    int n, x, m;
-    while(~scanf("%d%d", &n, &m))
-    {
-        for(int i=1; i<=n; i++)
-            scanf("%d", &val[i]);
-        int idx=1;
-        Treap *root=NULL;
-        for(int i=1; i<=m; i++)
-        {
-            scanf("%d", &x);
-            for(int j=idx; j<=x; j++)
-                Insert(root, val[j]);
-            idx=x+1;
-            printf("%d\n", Kth(root, i));
-        }
-        DeleteTreap(root);
-    }
-    return 0;
+#define int long long
+
+const int INF=1e9+7;
+
+namespace Treap{
+	struct Treap_Node{
+		Treap_Node *left,*right;
+		int value,fix,size;
+	};
+
+	Treap_Node *root=NULL;
+
+	int size(Treap_Node *&x){
+		if (x) return x->size; else return 0;
+	}
+
+	void left_rotate(Treap_Node *&aa){
+		Treap_Node *bb=aa->right;
+		aa->size = aa->size - size(aa->right) + size(bb->left);
+		aa->right = bb->left;
+		bb->size = bb->size - size(bb->left) + size(aa);
+		bb->left = aa;
+		aa=bb;
+	}
+
+	void right_rotate(Treap_Node *&aa){
+		Treap_Node *bb=aa->left;
+		aa->size = aa->size - size(aa->left) + size(bb->right);
+		aa->left = bb->right;
+		bb->size = bb->size - size(bb->right) + size(aa);
+		bb->right = aa;
+		aa=bb;
+	}
+
+	void insert_node(Treap_Node *&now,int value){
+		if (!now){
+			now=new Treap_Node;
+			now->left=now->right=NULL;
+			now->value=value;
+			now->fix=rand();
+			now->size=1;
+		} else if (value <= now->value){
+			insert_node(now->left,value);
+			now->size=size(now->left)+size(now->right)+1;
+			if (now->left->fix < now->fix) right_rotate(now);
+		} else {
+			insert_node(now->right,value);
+			now->size=size(now->left)+size(now->right)+1;
+			if (now->right->fix < now->fix) left_rotate(now);
+		}
+	}
+
+	void delete_node(Treap_Node *&now,int value){
+		if (now->value == value){
+			if ((!now->left) || (!now->right)){
+				Treap_Node *tmp=now;
+				if (now->left) now=now->left; else now=now->right;
+				delete tmp; tmp=NULL;
+			} else {
+				if (now->left->fix < now->right->fix){
+					right_rotate(now);
+					delete_node(now->right,value);
+				} else {
+					left_rotate(now);
+					delete_node(now->left,value);
+				}
+			}
+		} else if (now->value > value) delete_node(now->left,value);
+		else delete_node(now->right,value);
+		if (now) now->size=size(now->left)+size(now->right)+1;
+	}
+
+	int search_node_rank(Treap_Node *&now,int value){
+		if (!now) return 0;
+		if (value > now->value) return size(now->left)+1+search_node_rank(now->right,value);
+		else return search_node_rank(now->left,value);
+	}
+	
+	int search_kth(Treap_Node *&now,int k){
+		Treap_Node *x=now;
+		for (;;){
+			if ((x->left) && k <= size(x->left)) x=x->left; else
+			if ((x->right) && k > size(x->left)+1) k-=size(x->left)+1,x=x->right; else
+			return x->value;
+		}
+	}
+
+	int search_pre(Treap_Node *&now,int value){
+		if (!now) return -INF;
+		int ret=-INF;
+		if (value <= now->value) ret=search_pre(now->left,value); else ret=search_pre(now->right,value);
+		if (ret!=-INF && ret>=value) ret=-INF;
+		return ((ret!=-INF)?ret:(now->value));
+	}
+
+	int search_suf(Treap_Node *&now,int value){
+		if (!now) return INF;
+		int ret=INF;
+		if (value >= now->value) ret=search_suf(now->right,value); else ret=search_suf(now->left,value);
+		if (ret!=INF && ret<=value) ret=INF;
+		return ((ret!=INF)?ret:(now->value));
+	}
+
+	void print_tree(Treap_Node *&now){
+		printf("Value=%lld, size=%lld. ",now->value,now->size);
+		if (now->left) printf("left=%lld ",now->left->value);
+		if (now->right) printf("right=%lld ",now->right->value);
+		printf("\n");
+		if (now->left) print_tree(now->left);
+		if (now->right) print_tree(now->right);
+	}
 }
