@@ -10,9 +10,8 @@ using namespace std;
 const int maxn=25,maxs=1048576+10;
 int n,m,INF;
 char a[maxn][maxn];
-int cost[maxn][maxn];
+int cost[maxn][maxn],ss[maxn][maxn],sc[maxn][maxn];
 int f[maxs];
-
 
 inline int read(){
 	int ret=0,f=1;char ch=getchar();
@@ -25,17 +24,25 @@ signed main(){
 	n=read();m=read();
 	for (int i=0;i<n;i++) scanf("%s+1",a[i]);
 	for (int i=0;i<n;i++){
-		for (int j=1;j<=m;j++) cost[i][j]=read();
+		for (int j=0;j<m;j++) cost[i][j]=read();
 	}
 	
 	memset(f,63,sizeof(f));
 	INF=f[0];
 	int init_s=0;
 	for (int i=0;i<n;i++){
-		for (int j=1;j<=m;j++){
+		for (int j=0;j<m;j++){
 			bool flg=true;
 			for (int k=0;k<n;k++) if (k!=i && a[i][j]==a[k][j]){flg=false;break;}
 			if (flg) {init_s+=1<<i;break;}
+		}
+	}
+	for (int i=0;i<n;i++){
+		for (int j=0;j<m;j++){
+			for (int k=0;k<n;k++) if (k!=i && a[i][j]==a[k][j]){
+				ss[i][j]+=1<<k;
+				sc[i][j]+=cost[k][j];
+			}
 		}
 	}
 	f[init_s]=0;
@@ -43,18 +50,13 @@ signed main(){
 	for (int s=0;s<alls;s++) if (f[s]!=INF){
 		for (int i=0;i<n;i++) if ((s&(1<<i))==0){
 			int nxt_s=s+(1<<i);
-			for (int j=1;j<=m;j++){
+			for (int j=0;j<m;j++){
 				f[nxt_s]=min(f[nxt_s],f[s]+cost[i][j]);
 			}
 
-			int cost_now=0;
-			for (int j=1;j<=m;j++){
-				nxt_s=s;int sum=0,max_cost=0;
-				for (int k=0;k<n;k++) if (a[k][j]==a[i][j]){
-					if ((nxt_s&(1<<k))==0) nxt_s+=1<<k;
-					sum+=cost[k][j];max_cost=max(max_cost,cost[k][j]);
-				}
-				f[nxt_s]=min(f[nxt_s],f[s]+sum-max_cost);
+			for (int j=0;j<m;j++){
+				nxt_s=(s+(1<<i))|ss[i][j];
+				f[nxt_s]=min(f[nxt_s],f[s]+sc[i][j]);
 			}
 		}
 	}
