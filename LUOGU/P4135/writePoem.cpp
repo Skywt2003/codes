@@ -8,21 +8,21 @@ inline int read(){
     return ret*f;
 }
 
-const int maxn=100005,maxb=350;
+const int maxn=100005,maxb=305,maxc=355;
 int n,c,m,b,nn=0;
-int a[maxn],tob[maxn];
+int a[maxn];
 int cnt[maxb][maxn],f[maxb][maxb];
 int cur[maxn];
-int que[maxb*2];
+int que[maxc*2];
 pair<int,int> block[maxb];
 
 void build_block(){
-    b=sqrt(n);
+    b=max((int)sqrt(n),n/300);
     for (int i=1,id=1;i<=n;i+=b,id++,nn++) block[id]=make_pair(i,min(i+b-1,n));
 
     for (int i=1;i<=nn;i++){
         for (int j=1;j<=c;j++) cnt[i][j]=cnt[i-1][j];
-        for (int j=block[i].first;j<=block[i].second;j++) cnt[i][a[j]]++,tob[j]=i;
+        for (int j=block[i].first;j<=block[i].second;j++) cnt[i][a[j]]++;
     }
 
     for (int i=1;i<=nn;i++){
@@ -44,7 +44,11 @@ void build_block(){
 
 int query(int x,int y){
     int tail=0;
-    int l=x,r=y,bl=tob[x],br=tob[y];
+    int l=x,r=y,bl,br;
+    for (int i=1;i<=nn;i++){
+        if (block[i].first<=x && x<=block[i].second) bl=i;
+        if (block[i].first<=y && y<=block[i].second) br=i;
+    }
     while (l+1<=r && l<=block[bl].second) que[++tail]=a[l],l++;
     while (l<=r-1 && r>=block[br].first)  que[++tail]=a[r],r--;
     if (l==r) que[++tail]=a[l];
