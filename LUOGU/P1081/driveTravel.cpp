@@ -41,7 +41,7 @@ void delete_node(int x){
 
 void pre_build(){
     build_chain();
-    for (int i=1;i<n;i++){
+    for (int i=1;i<=n;i++){
         if (a[i].nxt==0) Bw[i]=a[i].pre; else
         if (a[i].pre==0) Bw[i]=a[i].nxt; else
         Bw[i]=(Abs(a[a[i].nxt].h-a[i].h) < Abs(a[a[i].pre].h-a[i].h) || ((Abs(a[a[i].nxt].h-a[i].h) == Abs(a[a[i].pre].h-a[i].h)&&(a[a[i].nxt].h < a[a[i].pre].h))))?
@@ -49,7 +49,7 @@ void pre_build(){
         delete_node(i);
     }
     build_chain();
-    for (int i=1;i<=n-2;i++){
+    for (int i=1;i<=n;i++){
         vector<city> vec; vec.clear();
         if (a[i].pre) vec.push_back(a[a[i].pre]);
         if (a[a[i].pre].pre) vec.push_back(a[a[a[i].pre].pre]);
