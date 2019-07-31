@@ -1,6 +1,5 @@
 #include<bits/stdc++.h>
 using namespace std;
-#define int long long
 
 inline int read(){
     int ret=0,f=1;char ch=getchar();
@@ -13,7 +12,7 @@ struct task{
     int id,s,t,v;
 
     bool operator <(task bb)const{
-        return (v>bb.v)||((v==bb.v)&&(s<bb.s));
+        return (v<bb.v)||((v==bb.v)&&(s>bb.s));
     }
 };
 
@@ -25,15 +24,19 @@ task make_task(int id,int s,int t,int v){
 }
 
 signed main(){
-    int id,s,t,v;
-    int allt=0;
+    // freopen("testdata.in","r",stdin);
+    int id,s,t,v,allt=0;
     while (scanf("%d%d%d%d",&id,&s,&t,&v)!=-1){
         task now=make_task(id,s,t,v);
-        while (allt < s){
+        if (que.empty()) {allt=now.s;que.push(now);continue;}
+        
+        while ((!que.empty()) && allt<s){
             task now_top=que.top(); que.pop();
-            if (allt+now_top.t < s) allt+=now_top.t,printf("%d %d\n",now_top.id,allt);
-            else now_top.t-=s-allt-1,allt=s-1,que.push(now_top);
+            if (allt < now_top.s) allt=now_top.s;
+            if (allt+now_top.t <= s) allt+=now_top.t,printf("%d %d\n",now_top.id,allt);
+            else {now_top.t-=s-allt,allt=s,que.push(now_top);break;}
         }
+
         que.push(now);
     }
     while (!que.empty()){
