@@ -1,26 +1,28 @@
 // 181019
+// 190801 Update
 
 #include<bits/stdc++.h>
+using namespace std;
 
 const int maxn=1005,maxe=10005;
-int tot=0,lnk[maxn],nxt[maxe],son[maxe],w[maxe];
-int dst[maxn];
+int tot=0,lnk[maxn],nxt[maxe],to[maxe],w[maxe];
+int dist[maxn];
 
-namespace SPFA{
-	bool vis[maxn];
-	queue <int> que;
+bool vis[maxn];
+queue <int> que;
 
-	inline void SPFA(int s){
-		memset(vis,0,sizeof(vis));
-		while (!que.empty()) que.pop();
-		que.push(s);vis[s]=true;
-		while (!que.empty()){
-			int head=que.front();que.pop();
-			vis[head]=false;
-			for (int i=lnk[head];i;i=nxt[i]) if (dst[head]+w[i]<dst[son[i]]){
-				dst[son[i]]=dst[head]+w[i];
-				if (!vis[son[i]]) que.push(son[i]),vis[son[i]]=true;
-			}
+void SPFA(int s){
+	while (!que.empty()) que.pop();
+	memset(dist,63,sizeof(dist));
+	memset(vis,0,sizeof(vis));
+
+	que.push(s); vis[s]=true; dist[s]=0;
+	while (!que.empty()){
+		int head=que.front(); que.pop();
+		vis[head]=false;
+		for (int i=lnk[head];i;i=nxt[i]) if (dist[head]+w[i] < dist[to[i]]){
+			dist[to[i]]=dist[head]+w[i];
+			if (!vis[to[i]]) que.push(to[i]),vis[to[i]]=true;
 		}
 	}
 }
