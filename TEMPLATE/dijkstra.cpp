@@ -19,8 +19,10 @@ struct node{
 	}
 };
 void make_node(int x,int w){node ret; ret.x=x; ret.w=w; return ret;}
+
 priority_queue <node> heap;
 bool vis[maxn];
+
 void Dijkstra(int s){
 	memset(dist,0x7f,sizeof(dist));
 	memset(vis,0,sizeof(vis));
