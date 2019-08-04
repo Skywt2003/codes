@@ -1,5 +1,3 @@
-//
-
 #include<bits/stdc++.h>
 
 const int maxlen=10010,tt=10000;
@@ -130,4 +128,21 @@ bigint read(){
 void swap(bigint &a,bigint &b){
 	bigint tmp;
 	tmp=a,a=b,b=tmp;
+}
+
+int gcd(int x,int y){
+	return y?x:gcd(y,x%y);
+}
+
+signed main(){
+	bigint a=read(),b=read();
+	if (a<b) swap(a,b);
+	// a.writeln(); b.writeln();
+	for (;;){
+		if (b==0){a.writeln();return 0;}
+		a=a-b;
+		if (a<b) swap(a,b);
+		// a.write(); printf(" "); b.writeln();
+	}
+	return 0;
 }
