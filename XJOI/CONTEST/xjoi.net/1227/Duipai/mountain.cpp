@@ -1,5 +1,5 @@
 #include<bits/stdc++.h>
-// #define int long long
+#define int long long
 using namespace std;
 
 inline int read(){
@@ -46,8 +46,8 @@ signed main(){
     for (int i=1;i<=m;i++) b[i]=make_pair(i,read());
 
     // printf("In stack: \n");
-    // for (int i=1;i<=stk_top;i++) printf("%d ",stk[i].second);printf("\n");
-    // for (int i=1;i<=stk_top;i++) printf("%d ",stk[i].first);printf("\n");
+    // for (int i=1;i<=stk_top;i++) printf("%lld ",stk[i].second);printf("\n");
+    // for (int i=1;i<=stk_top;i++) printf("%lld ",stk[i].first);printf("\n");
 
     sort(b+1,b+1+m,compare_second);
     for (int i=1;i<=m;i++) if (b[i].second >= 0){
@@ -65,14 +65,14 @@ signed main(){
     }
 
     // printf("In stack: \n");
-    // for (int i=1;i<=stk_top;i++) printf("%d ",stk[i].second);printf("\n");
-    // for (int i=1;i<=stk_top;i++) printf("%d ",stk[i].first);printf("\n");
+    // for (int i=1;i<=stk_top;i++) printf("%lld ",stk[i].second);printf("\n");
+    // for (int i=1;i<=stk_top;i++) printf("%lld ",stk[i].first);printf("\n");
 
     for (int i=m;i>=1;i--) if (ans[b[i].first]==-1){
         while (stk_top>=2 && -1.0*get_sloop(stk[stk_top-1],stk[stk_top]) < b[i].second) stk_top--;
         ans[b[i].first]=stk[stk_top].second - b[i].second*stk[stk_top].first;
     }
 
-    for (int i=1;i<=m;i++) printf("%d ",ans[i]); printf("\n");
+    for (int i=1;i<=m;i++) printf("%lld ",ans[i]); printf("\n");
     return 0;
 }
