@@ -1,4 +1,4 @@
-//
+// 190914
 
 #include<bits/stdc++.h>
 
@@ -114,6 +114,19 @@ class bigint{
 			while (c.len>0 && c.a[c.len]==0) c.len--;
 			return c;
 		}
+
+		bigint operator *(bigint b){
+			bigint c; c.len=len+b.len-1;
+			for (int i=1;i<=len;i++)
+			for (int j=1;j<=b.len;j++){
+				c.a[i+j-1]+=a[i]*b.a[j];
+				c.a[i+j]+=c.a[i+j-1]/tt;
+				c.a[i+j-1]%=tt;
+			}
+			while (c.a[c.len+1]) c.len++;
+			while (c.len>0 && c.a[c.len]==0) c.len--;
+			return c;
+		}
 };
 
 bigint read(){
@@ -130,4 +143,18 @@ bigint read(){
 void swap(bigint &a,bigint &b){
 	bigint tmp;
 	tmp=a,a=b,b=tmp;
+}
+
+bigint max(bigint x,bigint y){
+    if (x>y) return x; else return y;
+}
+
+bigint qsm(int a,int b){
+    bigint ret; ret.set_value(1);
+    bigint w; w.set_value(a);
+    while (b){
+        if (b&1) ret=ret*w;
+        b>>=1; w=w*w;
+    }
+    return ret;
 }
