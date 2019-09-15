@@ -124,7 +124,7 @@ void swap(bigint &a,bigint &b){
 }
 
 int get_num(int m,int i,int j){
-    return m-i-j+2;
+    return m-j+i;
 }
 
 int read(){
