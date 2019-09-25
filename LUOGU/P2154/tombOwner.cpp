@@ -10,7 +10,7 @@ inline int read(){
 }
 
 const int tt=2147483648;
-const int maxw=10005,maxk=15;
+const int maxw=100005,maxk=15;
 
 int n,m,w,k;
 int c[maxw][maxk];
@@ -52,7 +52,7 @@ bool compare_second(pair<int,int> aa,pair<int,int> bb){
 }
 
 int sum[maxw],total[maxw];
-indexTree tup,tdown;
+indexTree cmul;
 int ans=0;
 
 void discretize(){
@@ -73,11 +73,9 @@ void discretize(){
             a[i].first=++x;
         } else a[i].first=x;
     }
-
-    // printf("AFTER DISCRETIOZE:\n");
-    // for (int i=1;i<=w;i++) printf("%lld %lld\n",a[i].first,a[i].second);
-    // printf("\n");
 }
+
+bool opt[maxw];
 
 signed main(){
     n=read(); m=read();
@@ -90,33 +88,22 @@ signed main(){
     discretize();
     for (int i=1;i<=w;i++) total[a[i].second]++;
 
-    for (int i=1;i<=w;i++) if (i==1 || a[i].second != a[i-1].second) tdown.update(a[i].second,c[total[a[i].second]][k]);
-
-    for (int i=2,j;i<=w;i=j+1){
+    for (int i=1,j;i<=w;i=j+1){
         j=i;
         while (j+1<=w && a[j+1].first==a[i].first) j++;
         for (int t=i;t<=j;t++){
-            tup.update(a[t].second,tt-c[sum[a[t].second]][k]);
-            tdown.update(a[t].second,tt-c[total[a[t].second]-sum[a[t].second]][k]);
+            int pre_value=c[sum[a[t].second]][k] * (c[total[a[t].second]-sum[a[t].second]][k]) %tt;
+            cmul.update(a[t].second,tt-pre_value);
             sum[a[t].second]++;
-            tup.update(a[t].second,c[sum[a[t].second]][k]);
-            tdown.update(a[t].second,c[total[a[t].second]-sum[a[t].second]][k]);
+            int now_value=c[sum[a[t].second]][k] * (c[total[a[t].second]-sum[a[t].second]][k]) %tt;
+            cmul.update(a[t].second,now_value);
 
             int l=t-i,r=j-t+1;
             if (l<k || r<k) continue;
             if (a[t].second == a[t-1].second+1) continue;
-            ans=ans + c[l][k]%tt*
+            ans=(ans + c[l][k]%tt*
                       c[r][k]%tt*
-                      (tup.query(a[t].second-1)-tup.query(a[t-1].second)+tt)%tt*
-                      (tdown.query(a[t].second-1)-tdown.query(a[t-1].second)+tt)%tt;
-            printf("x=%lld [%lld to %lld] added answer: %lld %lld %lld %lld",
-                a[t].first,
-                a[t-1].second,
-                a[t].second,
-                c[l][k],
-                c[r][k],
-                tup.query(a[t].second-1)-tup.query(a[t-1].second),
-                tdown.query(a[t].second-1)-tdown.query(a[t-1].second));
+                      (cmul.query(a[t].second-1)-cmul.query(a[t-1].second)+tt)%tt)%tt;
         }
     }
     printf("%lld\n",ans);
