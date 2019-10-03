@@ -58,7 +58,19 @@
 		"typeinfo": "cpp",
 		"utility": "cpp",
 		"valarray": "cpp",
-		"regex": "cpp"
+		"regex": "cpp",
+		"charconv": "cpp",
+		"codecvt": "cpp",
+		"cuchar": "cpp",
+		"iterator": "cpp",
+		"map": "cpp",
+		"memory_resource": "cpp",
+		"optional": "cpp",
+		"random": "cpp",
+		"set": "cpp",
+		"string": "cpp",
+		"string_view": "cpp",
+		"shared_mutex": "cpp"
 	},
 	"C_Cpp.errorSquiggles": "Enabled"
 }
