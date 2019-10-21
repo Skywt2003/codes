@@ -14,63 +14,63 @@ const int maxn=2e5+5;
 const int INF=0x3f3f3f3f3f3f3f3f;
 
 class segmentTree{
-    #define ls (p<<1)
-    #define rs (p<<1|1)
-    #define mid (((tr-tl)>>1)+tl)
+	#define ls (p<<1)
+	#define rs (p<<1|1)
+	#define mid (((tr-tl)>>1)+tl)
  
-    private:
-        int maxv[maxn*4],minv[maxn*4],sub[maxn*4];
-        int tag[maxn*4];
+	private:
+		int maxv[maxn*4],minv[maxn*4],sub[maxn*4];
+		int tag[maxn*4];
  
-        void push_down(int tl,int tr,int p){
-            maxv[ls]+=tag[p]; minv[ls]+=tag[p];
-            maxv[rs]+=tag[p]; minv[rs]+=tag[p];
-            tag[ls]+=tag[p];tag[rs]+=tag[p];
-            tag[p]=0;
-        }
+		void push_down(int tl,int tr,int p){
+			maxv[ls]+=tag[p]; minv[ls]+=tag[p];
+			maxv[rs]+=tag[p]; minv[rs]+=tag[p];
+			tag[ls]+=tag[p];tag[rs]+=tag[p];
+			tag[p]=0;
+		}
  
-    public:
-        segmentTree(){
-            memset(maxv,0,sizeof(maxv));
-            memset(minv,0,sizeof(minv));
+	public:
+		segmentTree(){
+			memset(maxv,0,sizeof(maxv));
+			memset(minv,0,sizeof(minv));
 			memset(sub,0,sizeof(sub));
-            memset(tag,0,sizeof(tag));
-        }
+			memset(tag,0,sizeof(tag));
+		}
  
-        void update(int sl,int sr,int tl,int tr,int p,int delta){
-            if (sl<=tl && tr<=sr){
-                maxv[p]+=delta;
-                minv[p]+=delta;
-                tag[p]+=delta;
-                return;
-            }
-            push_down(tl,tr,p);
-            if (sl  <=mid) update(sl,sr,tl,mid  ,ls,delta);
-            if (mid+1<=sr) update(sl,sr,mid+1,tr,rs,delta);
-            maxv[p]=max(maxv[ls],maxv[rs]);
-            minv[p]=min(minv[ls],minv[rs]);
+		void update(int sl,int sr,int tl,int tr,int p,int delta){
+			if (sl<=tl && tr<=sr){
+				maxv[p]+=delta;
+				minv[p]+=delta;
+				tag[p]+=delta;
+				return;
+			}
+			push_down(tl,tr,p);
+			if (sl  <=mid) update(sl,sr,tl,mid  ,ls,delta);
+			if (mid+1<=sr) update(sl,sr,mid+1,tr,rs,delta);
+			maxv[p]=max(maxv[ls],maxv[rs]);
+			minv[p]=min(minv[ls],minv[rs]);
 			sub[p]=max(max(sub[ls],sub[rs]),maxv[rs]-minv[ls]);
-        }
+		}
  
-        int query_max(int sl,int sr,int tl,int tr,int p){
-            if (sl<=0 || sr<=0) return 0;
-            if (sl<=tl && tr<=sr) return maxv[p];
-            push_down(tl,tr,p);
-            int ret=-INF;
-            if (sl  <=mid) ret=max(ret,query_max(sl,sr,tl,mid  ,ls));
-            if (mid+1<=sr) ret=max(ret,query_max(sl,sr,mid+1,tr,rs));
-            return ret;
-        }
+		int query_max(int sl,int sr,int tl,int tr,int p){
+			if (sl<=0 || sr<=0) return 0;
+			if (sl<=tl && tr<=sr) return maxv[p];
+			push_down(tl,tr,p);
+			int ret=-INF;
+			if (sl  <=mid) ret=max(ret,query_max(sl,sr,tl,mid  ,ls));
+			if (mid+1<=sr) ret=max(ret,query_max(sl,sr,mid+1,tr,rs));
+			return ret;
+		}
  
-        int query_min(int sl,int sr,int tl,int tr,int p){
-            if (sl<=0 || sr<=0) return 0;
-            if (sl<=tl && tr<=sr) return minv[p];
-            push_down(tl,tr,p);
-            int ret=INF;
-            if (sl  <=mid) ret=min(ret,query_min(sl,sr,tl,mid  ,ls));
-            if (mid+1<=sr) ret=min(ret,query_min(sl,sr,mid+1,tr,rs));
-            return ret;
-        }
+		int query_min(int sl,int sr,int tl,int tr,int p){
+			if (sl<=0 || sr<=0) return 0;
+			if (sl<=tl && tr<=sr) return minv[p];
+			push_down(tl,tr,p);
+			int ret=INF;
+			if (sl  <=mid) ret=min(ret,query_min(sl,sr,tl,mid  ,ls));
+			if (mid+1<=sr) ret=min(ret,query_min(sl,sr,mid+1,tr,rs));
+			return ret;
+		}
 
 		int query_sub(int sl,int sr,int tl,int tr,int p){
 			if (sl<=0 || sr<=0) return 0;
@@ -84,9 +84,9 @@ class segmentTree{
 			return ret;
 		}
  
-    #undef ls
-    #undef rs
-    #undef mid
+	#undef ls
+	#undef rs
+	#undef mid
 };
 
 segmentTree t;
@@ -107,15 +107,15 @@ signed main(){
 
 	q=read();
 	while (q--){
-        int opt=read();
-        if (opt==1){
-            int x=read();
-            if (a[x]==1) a[x]=-1,t.update(x,n,1,n,1,-2);
-            else a[x]=1,t.update(x,n,1,n,1,2);
-        } else if (opt==2){
-            int x=read(),y=read();
-            int ans=-(t.query_min(x,y,1,n,1)-t.query_min(x-1,x-1,1,n,1));
-            printf("%lld\n",max(ans,0ll));
+		int opt=read();
+		if (opt==1){
+			int x=read();
+			if (a[x]==1) a[x]=-1,t.update(x,n,1,n,1,-2);
+			else a[x]=1,t.update(x,n,1,n,1,2);
+		} else if (opt==2){
+			int x=read(),y=read();
+			int ans=-(t.query_min(x,y,1,n,1)-t.query_min(x-1,x-1,1,n,1));
+			printf("%lld\n",max(ans,0ll));
 		} else if (opt==3){
 			int x=read(),y=read(),ans=0;
 			int std_line=t.query_max(x-1,x-1,1,n,1),std_r=t.query_max(y,y,1,n,1);
@@ -126,7 +126,7 @@ signed main(){
 			#ifdef DEBUG
 				printf("lower=%lld delta=%lld std_line=%lld std_r=%lld\n",lower,delta,std_line,std_r);
 			#endif
-            ans=lower + max(0ll, max(std_line+delta+fix,t.query_max(x,y,1,n,1))-(std_r+lower));
+			ans=lower + max(0ll, max(std_line+delta+fix,t.query_max(x,y,1,n,1))-(std_r+lower));
 
 			printf("%lld\n",ans);
 		}
