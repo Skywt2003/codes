@@ -1,5 +1,3 @@
-// This solution is wrong.
-
 #include<bits/stdc++.h>
 #define int long long
 
@@ -14,48 +12,92 @@ inline int read(){
 
 const int maxn=1e5+5;
 
-int n,p,t[maxn],ans[maxn];
+int n,p,ans[maxn];
 
 struct node{
-	int x,y;
+	int t,id;
 
 	bool operator <(node bb)const{
-		return y > bb.y;
+		return id > bb.id;
 	}
 	bool operator >(node bb)const{
-		return y < bb.y;
+		return id < bb.id;
 	}
 };
 
 node b[maxn];
-
+deque<node> que;
 priority_queue<node> heap;
 
 bool compare_s(node aa,node bb){
-	return (aa.x<bb.x)||(aa.x==bb.x && aa.y<bb.y);
+	return (aa.t<bb.t)||(aa.t==bb.t && aa.id<bb.id);
 }
 
+class indexTree{
+	private:
+		int tree[maxn];
+
+		int lowbit(int x){
+			return x&(-x);
+		}
+
+	public:
+		indexTree(){
+			memset(tree,0,sizeof(tree));
+		}
+
+		void update(int x,int delta){
+			while (x<=n) tree[x]+=delta,x+=lowbit(x);
+		}
+
+		int query(int x){
+			int ret=0;
+			while (x) ret+=tree[x],x-=lowbit(x);
+			return ret;
+		}
+};
+indexTree t;
+
 signed main(){
-	n=read(); p=read();
-	for (int i=1;i<=n;i++){
-		t[i]=read();
-		b[i]=(node){t[i],i};
-	}
+	n=read(),p=read();
+	for (int i=1;i<=n;i++) b[i]=(node){read(),i};
 
 	sort(b+1,b+1+n,compare_s);
 	while (!heap.empty()) heap.pop();
+	while (!que.empty()) que.pop_back();
 
-	int nowt=0,pt=0;
-	for (;pt<=n;){
-		while (pt+1<=n && nowt>=b[pt+1].x) heap.push(b[++pt]);
-		if (heap.empty()){
-			pt++; nowt=b[pt].x,heap.push(b[pt]);
-			while (pt+1<=n && nowt>=b[pt+1].x) heap.push(b[++pt]);
+	int nowt=0;
+	for (int i=1;i<=n;i++){
+		while (!que.empty() && que.front().t+p <= b[i].t){
+			nowt=max(nowt+p, que.front().t+p);
+			ans[que.front().id]=nowt,
+			t.update(que.front().id,1),
+			que.pop_front();
 		}
-		node now=heap.top(); heap.pop();
-		nowt+=p; ans[now.y]=nowt;
-		if (pt==n && heap.empty()) break;
+		while (!heap.empty() && t.query(heap.top().id-1)==0)
+			que.push_back(heap.top()),heap.pop();
+		if (t.query(b[i].id-1) == 0)
+			que.push_back(b[i]),
+			t.update(b[i].id,-1);
+		else heap.push(b[i]);
 	}
+
+	while ((!heap.empty()) || (!que.empty())){
+		if (!que.empty()){
+			nowt=max(nowt+p,que.front().t+p);
+			ans[que.front().id]=nowt;
+			t.update(que.front().id,1);
+			que.pop_front();
+		}
+		#ifdef EBUG
+			if (!heap.empty())
+				printf("TOP QUERY: %lld\n",t.query(heap.top().id-1));
+			else printf("Heap empty\n");
+		#endif
+		while (!heap.empty() && t.query(heap.top().id-1)==0)
+			que.push_back(heap.top()),heap.pop();
+	}
+
 	for (int i=1;i<=n;i++) printf("%lld ",ans[i]);
 	printf("\n");
 	return 0;
