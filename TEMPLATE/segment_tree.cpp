@@ -58,3 +58,7 @@ class segmentTree{
 			return ret;
 		}
 };
+
+#undef ls
+#undef rs
+#undef mid

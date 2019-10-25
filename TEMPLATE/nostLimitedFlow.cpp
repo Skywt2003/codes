@@ -17,7 +17,7 @@ int tot=-1,lnk[maxn],nxt[maxe],to[maxe],w[maxe],cur[maxn];
 int deep[maxn];
 queue<int> que;
 
-void addEdge(int x,int y,int z){
+void add_edge(int x,int y,int z){
 	tot++;to[tot]=y;w[tot]=z;
 	nxt[tot]=lnk[x];lnk[x]=tot;
 }
@@ -64,13 +64,13 @@ signed main(){
 	for (int i=1;i<=m;i++){
 		int x=read(),y=read();low[i]=read(),high[i]=read();
 		outd[x]+=low[i],ind[y]+=low[i];
-		addEdge(x,y,high[i]-low[i]);addEdge(y,x,0); rst[i]=tot;
+		add_edge(x,y,high[i]-low[i]);add_edge(y,x,0); rst[i]=tot;
 	}
 	
 	ss=n+1;tt=n+2;
 	for (int i=1;i<=n;i++){
-		if (ind[i]-outd[i]<0) addEdge(i,tt,outd[i]-ind[i]),addEdge(tt,i,0);
-		if (ind[i]-outd[i]>0) addEdge(ss,i,ind[i]-outd[i]),addEdge(i,ss,0);
+		if (ind[i]-outd[i]<0) add_edge(i,tt,outd[i]-ind[i]),add_edge(tt,i,0);
+		if (ind[i]-outd[i]>0) add_edge(ss,i,ind[i]-outd[i]),add_edge(i,ss,0);
 	}
 	n+=2;
 	Dinic();

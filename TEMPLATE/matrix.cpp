@@ -12,9 +12,9 @@ class matrix{
 			memset(a,0,sizeof(a));n=m=0;
 		}
 
-        void set_value(int x,int y,int v){
-            a[x][y]=v;
-        }
+		void set_value(int x,int y,int v){
+			a[x][y]=v;
+		}
 
 		void set_zero(int x,int y){
 			n=x;m=y;

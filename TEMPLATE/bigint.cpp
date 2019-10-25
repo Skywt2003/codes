@@ -146,15 +146,15 @@ void swap(bigint &a,bigint &b){
 }
 
 bigint max(bigint x,bigint y){
-    if (x>y) return x; else return y;
+	if (x>y) return x; else return y;
 }
 
 bigint qsm(int a,int b){
-    bigint ret; ret.set_value(1);
-    bigint w; w.set_value(a);
-    while (b){
-        if (b&1) ret=ret*w;
-        b>>=1; w=w*w;
-    }
-    return ret;
+	bigint ret; ret.set_value(1);
+	bigint w; w.set_value(a);
+	while (b){
+		if (b&1) ret=ret*w;
+		b>>=1; w=w*w;
+	}
+	return ret;
 }

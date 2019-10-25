@@ -1,6 +1,10 @@
-// XJOI CONTEST 1265 T1
+#include<bits/stdc++.h>
 
-class PST{
+using namespace std;
+
+const int maxn=10005;
+
+class chairmanTree{
 	#define mid (((tr-tl)>>1)+tl)
 
 	private:
@@ -11,7 +15,7 @@ class PST{
 	public:
 		int root[maxn];
 
-		PST(){
+		chairmanTree(){
 			tot=0;
 			memset(root,0,sizeof(root));
 		}
@@ -20,9 +24,6 @@ class PST{
 			p=++tot;
 			if (tl==tr){
 				sum[p]=pre[p]=suf[p] = init_value;
-				#ifdef EBUG
-					printf("p=%lld init_value=%lld\n",p,init_value);
-				#endif
 				return;
 			}
 			build(tl,mid,ls[p],init_value);
@@ -30,9 +31,6 @@ class PST{
 			sum[p]=sum[ls[p]]+sum[rs[p]];
 			pre[p]=max(pre[ls[p]],sum[ls[p]]+pre[rs[p]]);
 			suf[p]=max(suf[rs[p]],suf[ls[p]]+sum[rs[p]]);
-			#ifdef EBUG
-				printf("sum[%lld] = %lld\n",p,sum[p]);
-			#endif
 		}
 
 		void update(int tl,int tr,int &p,int lastp,int x,int delta){

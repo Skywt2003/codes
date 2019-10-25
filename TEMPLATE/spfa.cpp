@@ -1,6 +1,3 @@
-// 181019
-// 190801 Update
-
 #include<bits/stdc++.h>
 using namespace std;
 

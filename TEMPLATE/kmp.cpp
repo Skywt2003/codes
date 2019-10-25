@@ -1,7 +1,6 @@
-// 181018
-
 #include<bits/stdc++.h>
 
+using namespace std;
 namespace KMP{
 	int next[maxn];
 
@@ -27,4 +26,4 @@ namespace KMP{
 		}
 		return ret;
 	}
-}
+};
