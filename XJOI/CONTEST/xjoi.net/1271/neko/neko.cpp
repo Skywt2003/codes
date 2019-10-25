@@ -14,110 +14,119 @@ inline int read(){
 const int INF=0x3f3f3f3f3f3f3f3f;
 const int NEG_INF=0x8080808080808080;
 
-const int maxn=10005;
+const int maxn=20005;
 
 int T;
 int n,s,m,k;
 int a[maxn];
 
-class uniset{
-	private:
-		int fa[maxn],sum[maxn],cnt[maxn];
-
-	public:
-		inline void init(int n){for (int i=0;i<n;i++) fa[i]=i,sum[i]=a[i],cnt[i]=1;}
-
-		inline int getcnt(int x){return cnt[getfa(x)];}
-		inline int getsum(int x){return sum[getfa(x)];}
-		
-		inline int getfa(int x){return (fa[x]==x)?x:fa[x]=getfa(fa[x]);}
-		void merge(int x,int y){
-			x=getfa(x),y=getfa(y);
-			if (x==y) return;
-			fa[x]=y;
-			sum[y]+=sum[x],sum[x]=0;
-			cnt[y]+=cnt[x],cnt[x]=0;
-		}
-};
-
 bool vis[maxn];
-uniset u;
 
-inline void init(){
-	memset(vis,0,sizeof(vis));
-	u.init(n);
-}
+vector<int> loop;
+int sum,cnt=0;
+
+int pre[maxn];
+
+int que[maxn];
+int head=0,tail=0;
+
+int ans=0;
 
 inline int nxt(int x){return (x+k)%n;}
 inline int lst(int x){return (x-k+n)%n;}
+
+void init(){
+	memset(vis,0,sizeof(vis)); ans=0;
+}
 
 signed main(){
 	#ifdef DEBUG
 		freopen("data.in","r",stdin);
 	#endif
+
 	T=read();
 	for (int cse=1;cse<=T;cse++){
 		n=read();s=read();m=read();k=read();
 		for (int i=0;i<n;i++) a[i]=read();
 		init();
-
+		
 		int ans=0;
 		for (int i=0;i<n;i++) if (!vis[i]){
-			int j=i; vis[j]=true;
-			while (nxt(j)!=i) j=nxt(j),vis[j]=true,u.merge(i,j);
-		}
+			loop.clear();
 
-		#ifdef DEBUG
-			printf("getsum(1)=%lld\n",u.getsum(1));
-		#endif
-		memset(vis,0,sizeof(vis));
-
-		for (int i=0;i<n;i++) if (!vis[i]){
-			int cnt=u.getcnt(i),sum=u.getsum(i);
-			int now=max(0ll,(m/cnt)*sum); ans=max(ans,now);
-			int lft=m%cnt;
-
-			int head=i,tail=i,allsum=0,delta=0;
-
-			cnt--; vis[head]=true;
-			int tmp1=lft,tmp2=i;
-			while (tmp1--){
-				allsum+=a[tmp2];
-				if (allsum > delta) delta=allsum,tail=tmp2;
-				tmp2=nxt(tmp2);
-			}
-			ans=max(ans,now+delta);
-
+			int j=i; vis[i]=true;
+			loop.push_back(i),sum=a[i];
+			while (nxt(j)!=i) j=nxt(j),vis[j]=true,loop.push_back(j),sum+=a[j];
 			#ifdef DEBUG
-				printf("head=%lld tail=%lld delta=%lld allsum=%lld\n",head,tail,delta,allsum);
+				printf("In loop:\n");
+				for (int j=0;j<loop.size();j++) printf("%lld ",loop[j]); printf("\n");
 			#endif
-			while (cnt--){
-				head=nxt(head); vis[head]=true;
-				delta-=a[lst(head)];
-				if (tail==lst(head)){
-					tail=head; delta=a[head];
-					int tmp1=cnt,tmp2=head,tmp3=0;
-					while (tmp1--){
-						tmp3+=a[tmp2];
-						if (tmp3 > delta) delta=tmp3,tail=tmp2;
-						tmp2=nxt(tmp2);
-					}
-				}
-				allsum=allsum - a[lst(head)] + a[(head+(lft-1)*k)%n];
-				if (allsum > delta) delta=allsum,tail=(head+(lft-1)*k)%n;
 
-				ans=max(ans,now+delta);
+			int len=loop.size();
+			for (int j=0;j<len;j++) loop.push_back(loop[j]);
+			for (int j=0;j<loop.size();j++) pre[j]=((j>0)?pre[j-1]:0) + a[loop[j]];
+			#ifdef DEBUG
+				printf("Pre[]:\n");
+				for (int j=0;j<2*len;j++) printf("%lld ",pre[j]); printf("\n");
+			#endif
+			
+			int now=0,lft;
+			if (sum<=0){
+				head=1,tail=1; que[1]=-1;
+				for (int j=0;j<2*len;j++){
+					while (head<tail && que[tail]-que[head]+1 > m) head++;
+					now=max(now,pre[j]-((que[head]==-1)?0:pre[que[head]]));
+					while (head<=tail && pre[que[tail]] > pre[j]) tail--;
+					que[++tail]=j;
+				}
+				ans=max(ans,now);
+			} else {
+				// case 1
+				now=0,lft=m%len;
+				if (lft){
+					head=1,tail=1; que[1]=-1;
+					for (int j=0;j<2*len;j++){
+						while (head<tail && que[tail]-que[head]+1 > lft) head++;
+						now=max(now,pre[j]-((que[head]==-1)?0:pre[que[head]]));
+						#ifdef DEBUG
+							printf("j=%lld head=%lld tail=%lld\n",j,head,tail);
+							for (int k=head;k<=tail;k++) printf("%lld ",que[k]); printf("\n");
+							printf("now=%lld\n",now);
+						#endif
+						while (head<=tail && pre[que[tail]] > pre[j]) tail--;
+						que[++tail]=j;
+					}
+					#ifdef DEBUG
+						printf("NOW(+)=%lld\n",now+sum*(m/len));
+					#endif
+					ans=max(ans,now+sum*(m/len));
+				}
 
 				#ifdef DEBUG
-					printf("head=%lld tail=%lld delta=%lld allsum=%lld\n",head,tail,delta,allsum);
+					printf("Case 2-----\n");
 				#endif
+				// case 2
+				now=0;
+				if (m>=len){
+					head=1,tail=1; que[1]=-1;
+					for (int j=0;j<2*len;j++){
+						while (head<tail && que[tail]-que[head]+1 > len) head++;
+						now=max(now,pre[j]-((que[head]==-1)?0:pre[que[head]]));
+						while (head<=tail && pre[que[tail]] > pre[j]) tail--;
+						que[++tail]=j;
+					}
+					#ifdef DEBUG
+						printf("NOW(+)=%lld\n",now+sum*(m/len-1));
+					#endif
+					ans=max(ans,now+sum*(m/len-1));
+				}
 			}
 		}
 
-		printf("Case #%lld: %lld\n",cse,max(s-ans,0ll));
 		#ifdef DEBUG
 			printf("ans=%lld\n",ans);
 		#endif
+		printf("Case #%lld: %lld\n",cse,max(s-ans,0ll));
 	}
 
 	return 0;
