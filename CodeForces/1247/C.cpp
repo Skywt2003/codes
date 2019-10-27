@@ -14,18 +14,14 @@ inline int read(){
 
 int n,k;
 
-int popcount(int x){
-	int ret=0;
-	while (x) ret+=x&1,x>>=1;
-	return ret;
-}
-
 signed main(){
 	n=read(); k=read();
 	for (int i=0;i<31;i++){
 		int now=n-k*i;
 		if (now<=0) continue;
-		if (popcount(now) <= i){
+		int s1=0,s2=0;
+		for (int j=0;j<31;j++) if (now&(1<<j)) s1++,s2+=1<<j;
+		if (s1<=i && i<=s2){
 			printf("%lld\n",i);
 			return 0;
 		}
