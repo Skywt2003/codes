@@ -1,6 +1,10 @@
+// 血的教训：用 std::vector<opration>::size() 前面一定要加 (int) 强转！！
+// (int)vec.size()
+// 因为 size() 返回是 size_t 类型的！！！
+
 #include<bits/stdc++.h>
 
-#define int long long
+// #define int long long
 
 using namespace std;
 
@@ -77,7 +81,7 @@ void mid_click(int x,int y){
 	int cnt=0;
 	for (int i=0;i<8;i++) if (check(nx,ny)) cnt+=mp[nx][ny]=='P';
 	if (mp[x][y]-'0' != cnt) return;
-	for (int i=0;i<8;i++) if (o[nx][ny]==false && mp[nx][ny]!='P') open(nx,ny);
+	for (int i=0;i<8;i++) if (check(nx,ny) && o[nx][ny]==false && mp[nx][ny]!='P') open(nx,ny);
 }
 
 #undef nx
@@ -90,7 +94,7 @@ bool compare_xy(opration aa,opration bb){
 signed main(){
 	#ifdef DEBUG
 		freopen("minesweeper.in","r",stdin);
-		freopen("my.out","w",stdout);
+		// freopen("my.out","w",stdout);
 	#endif
 
 	T=read();
@@ -117,8 +121,9 @@ signed main(){
 
 			sort(ans.begin(),ans.end(),compare_xy);
 			printf("RUNNING: [");
-			for (int i=0;i<ans.size()-1;i++) printf("<%lld, %lld, %c>, ",ans[i].x,ans[i].y,ans[i].ch);
-			if (ans.size()) printf("<%lld, %lld, %c>]\n",ans[ans.size()-1].x,ans[ans.size()-1].y,ans[ans.size()-1].ch);
+			for (int i=0;i<(int)ans.size()-1;i++) printf("<%d, %d, %c>, ",ans[i].x,ans[i].y,ans[i].ch);
+			if (ans.size()!=0) printf("<%d, %d, %c>]\n",ans[ans.size()-1].x,ans[ans.size()-1].y,ans[ans.size()-1].ch);
+			else printf("]\n");
 			
 			if (lft==k) printf("WIN\n");
 
