@@ -1,54 +1,6 @@
-#pragma GCC target("avx")
-#pragma GCC optimize(3)
-#pragma GCC optimize("Ofast")
-#pragma GCC optimize("inline")
-#pragma GCC optimize("-fgcse")
-#pragma GCC optimize("-fgcse-lm")
-#pragma GCC optimize("-fipa-sra")
-#pragma GCC optimize("-ftree-pre")
-#pragma GCC optimize("-ftree-vrp")
-#pragma GCC optimize("-fpeephole2")
-#pragma GCC optimize("-ffast-math")
-#pragma GCC optimize("-fsched-spec")
-#pragma GCC optimize("unroll-loops")
-#pragma GCC optimize("-falign-jumps")
-#pragma GCC optimize("-falign-loops")
-#pragma GCC optimize("-falign-labels")
-#pragma GCC optimize("-fdevirtualize")
-#pragma GCC optimize("-fcaller-saves")
-#pragma GCC optimize("-fcrossjumping")
-#pragma GCC optimize("-fthread-jumps")
-#pragma GCC optimize("-funroll-loops")
-#pragma GCC optimize("-fwhole-program")
-#pragma GCC optimize("-freorder-blocks")
-#pragma GCC optimize("-fschedule-insns")
-#pragma GCC optimize("inline-functions")
-#pragma GCC optimize("-ftree-tail-merge")
-#pragma GCC optimize("-fschedule-insns2")
-#pragma GCC optimize("-fstrict-aliasing")
-#pragma GCC optimize("-fstrict-overflow")
-#pragma GCC optimize("-falign-functions")
-#pragma GCC optimize("-fcse-skip-blocks")
-#pragma GCC optimize("-fcse-follow-jumps")
-#pragma GCC optimize("-fsched-interblock")
-#pragma GCC optimize("-fpartial-inlining")
-#pragma GCC optimize("no-stack-protector")
-#pragma GCC optimize("-freorder-functions")
-#pragma GCC optimize("-findirect-inlining")
-#pragma GCC optimize("-fhoist-adjacent-loads")
-#pragma GCC optimize("-frerun-cse-after-loop")
-#pragma GCC optimize("inline-small-functions")
-#pragma GCC optimize("-finline-small-functions")
-#pragma GCC optimize("-ftree-switch-conversion")
-#pragma GCC optimize("-foptimize-sibling-calls")
-#pragma GCC optimize("-fexpensive-optimizations")
-#pragma GCC optimize("-funsafe-loop-optimizations")
-#pragma GCC optimize("inline-functions-called-once")
-#pragma GCC optimize("-fdelete-null-pointer-checks")
-
 #include<bits/stdc++.h>
 
-// #define int long long
+#define int long long
 
 using namespace std;
 
@@ -61,67 +13,9 @@ inline int read(){
 
 const int maxn=3e5+5;
 
-int get_dist(int x,int y);
-
-inline int max(int x,int y){
-	return (x>y)?x:y;
-}
-inline int min(int x,int y){
-	return (x<y)?x:y;
-}
-
-#define ls (p<<1)
-#define rs (p<<1|1)
-class segmentTree{
-	private:
-		struct node{
-			int val,l,r;
-		};
-		node tree[maxn*4];
-
-		void push_down(int p){
-			if (!tree[p].val) return;
-			tree[ls].val=tree[rs].val=tree[p].val;
-		}
-
-	public:
-		void build(int tl,int tr,int p){
-			tree[p].l=tl;tree[p].r=tr;
-			if (tl==tr) {tree[p].val=tl;return;}
-			int mid=((tr-tl)>>1)+tl;
-			build(tl,mid,ls); build(mid+1,tr,rs);
-		}
-
-		void update(int sl,int sr,int p,int delta){
-			if (sl<=tree[p].l && tree[p].r<=sr){
-				tree[p].val=delta;
-				return;
-			}
-			push_down(p);
-			int mid=((tree[p].r-tree[p].l)>>1)+tree[p].l;
-			if (sl<=mid  ) update(sl,sr,ls,delta);
-			if (mid+1<=sr) update(sl,sr,rs,delta);
-			tree[p].val=((tree[ls].val==tree[rs].val)?tree[ls].val:0);
-		}
-
-		long long query(int sl,int sr,int p,int x){
-			if (tree[p].val) return 1ll*get_dist(x,tree[p].val)*(min(tree[p].r,sr)-max(tree[p].l,sl)+1);
-			push_down(p);
-			long long ret=0;
-			int mid=((tree[p].r-tree[p].l)>>1)+tree[p].l;
-			if (sl<=mid  ) ret+=query(sl,sr,ls,x);
-			if (mid+1<=sr) ret+=query(sl,sr,rs,x);
-			return ret;
-		}
-};
-#undef ls
-#undef rs
-
 int n;
 int tot=0,lnk[maxn],nxt[maxn*2],to[maxn*2];
 int f[maxn][22],deep[maxn];
-
-segmentTree t;
 
 void add_edge(int x,int y){
 	tot++; to[tot]=y;
@@ -150,24 +44,60 @@ int get_dist(int x,int y){
 	return deep[x]-deep[l]+deep[y]-deep[l];
 }
 
-long long ans=0;
+struct node{
+	int pos,id;
+	bool operator <(node bb)const{return id < bb.id;}
+	bool operator >(node bb)const{return id > bb.id;}
+};
+set<node> s;
+// set<node>::iterator it;
+
+int ans=0;
+
+#define sit set<node>::iterator
+int work(int x,int y,int t){
+	sit sl=s.lower_bound((node){0,x}),sr=s.upper_bound((node){0,y}); sl--;
+	#ifdef DEBUG
+		// printf("Found in set: %lld ... %lld\n",(*sl).id,(*sr).id);
+	#endif
+
+	vector<node> vec;vec.clear();
+	for (sit i=sl;;i++) {vec.push_back(*i);if (i==sr) break;}
+	for (int i=1;i<vec.size()-1;i++) s.erase(vec[i]);
+
+	int ret=0,last_id=x;
+	for (int i=1;i<vec.size();i++){
+		ret+=(min(y+1,vec[i].id)-last_id) * get_dist(vec[i-1].pos,t);
+		last_id=vec[i].id;
+	}
+	s.insert((node){t,x});
+	if (vec.size()!=0 && vec[vec.size()-1].id>y+1) s.insert((node){vec[vec.size()-2].pos,y+1});
+	return ret;
+}
+#undef sit
 
 signed main(){
+	#ifdef DEBUG
+		freopen("data.in","r",stdin);
+	#endif
 	n=read();
 	for (int i=1;i<n;i++){
 		int x=read(),y=read();
-		add_edge(x,y); add_edge(y,x);
+		add_edge(x,y);add_edge(y,x);
 	}
 
-	deep[1]=1;
-	build_tree(1);
-	
-	t.build(1,n,1);
+	deep[1]=1; build_tree(1);
+
+	s.clear();
+	s.insert((node){0,0});
+	for (int i=1;i<=n;i++) s.insert((node){i,i});
+	s.insert((node){0,n+1});
+
 	for (int i=1;i<=n;i++){
-		int l=read(),r=read(),p=read();
-		ans+=t.query(l,r,1,p);
-		t.update(l,r,1,p);
+		int x=read(),y=read(),t=read();
+		ans+=work(x,y,t);
 	}
+
 	printf("%lld\n",ans);
 	return 0;
 }
