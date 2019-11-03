@@ -13,39 +13,41 @@ inline int read(){
 
 const int INF=0x3f3f3f3f3f3f3f3f;
 
-const int maxn=506;
+const int maxn=5005,maxe=10005;
 
-int n,w,alls;
-int dist[maxn][maxn];
-int ans=0;
+int n,m;
+int tot=0,lnk[maxn],nxt[maxe],to[maxe],w[maxe];
+int siz[maxn];
+int f[maxn][maxn];
 
-void Floyd(){
-	for (int k=0;k<n;k++)
-		for (int i=0;i<n;i++) if (k!=i)
-			for (int j=0;j<n;j++) if (i!=j && k!=j)
-				dist[i][j]=min(dist[i][j],dist[i][k]+dist[k][j]);
+void add_edge(int x,int y,int z){
+	tot++; to[tot]=y; w[tot]=z;
+	nxt[tot]=lnk[x];lnk[x]=tot;
+}
+
+void DFS(int x,int fa){
+	siz[x]=1;
+	for (int i=lnk[x];i;i=nxt[i]) if (to[i]!=fa){
+		DFS(to[i],x);
+		for (int ii=siz[x];ii>=0;ii--)
+			for (int jj=siz[to[i]];jj>=0;jj--) if (m-jj>=0 && siz[to[i]]-jj>=0 && n-m-siz[to[i]]+jj>=0)
+				f[x][ii+jj]=max(f[x][ii+jj],f[x][ii]+f[to[i]][jj] + w[i]*jj*(m-jj) + w[i]*(siz[to[i]]-jj)*(n-m-siz[to[i]]+jj));
+		siz[x]+=siz[to[i]];
+	}
 }
 
 signed main(){
-	memset(dist,0x3f,sizeof(dist));
-	n=read(); w=read(); alls=1<<n;
+	#ifdef DEBUG
+		freopen("data.in","r",stdin);
+	#endif
+	n=read(); m=read();
 	for (int i=1;i<n;i++){
-		int x=read()-1,y=read()-1,z=read();
-		dist[x][y]=dist[y][x]=z;
+		int x=read(),y=read(),z=read();
+		add_edge(x,y,z); add_edge(y,x,z);
 	}
-	Floyd();
+	
+	DFS(1,-1);
+	printf("%lld\n",f[1][m]);
 
-	for (int s=0;s<alls;s++) if (__builtin_popcountll(s) == w){
-		int now=0;
-		for (int i=0;i<n;i++) if (s&(1<<i))
-			for (int j=i+1;j<n;j++) if (s&(1<<j))
-				now+=dist[i][j];
-		for (int i=0;i<n;i++) if (!(s&(1<<i)))
-			for (int j=i+1;j<n;j++) if (!(s&(1<<j)))
-				now+=dist[i][j];
-		ans=max(ans,now);
-	}
-
-	printf("%lld\n",ans);
 	return 0;
 }
