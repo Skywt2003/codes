@@ -22,9 +22,7 @@ int n,q;
 
 int tot=0,lnk[maxn],nxt[maxe],to[maxe];
 int siz[maxn];
-int deep[maxn],fa[maxn];
-
-int fac[maxn],inv[maxn];
+int deep[maxn],f[maxn][25],w[maxn][25];
 
 void add_edge(int x,int y){
 	tot++; to[tot]=y;
@@ -37,22 +35,30 @@ void init(){
 	memset(nxt,0,sizeof(nxt));
 	memset(to,0,sizeof(to));
 	memset(deep,0,sizeof(deep));
-	memset(fa,0,sizeof(fa));
+	memset(f,0,sizeof(f));
+	memset(w,0,sizeof(w));
+	memset(siz,0,sizeof(siz));
 }
 
 void build_tree(int x){
-	for (int i=lnk[x];i;i=nxt[i]) if (to[i]!=fa[x]){
-		deep[to[i]]=deep[x]+1; fa[to[i]]=x;
+	siz[x]=1;
+	for (int i=1;i<25;i++) f[x][i]=f[f[x][i-1]][i-1],w[x][i]=w[f[x][i-1]][i-1];
+
+	for (int i=lnk[x];i;i=nxt[i]) if (to[i]!=f[x][0]){
+		deep[to[i]]=deep[x]+1;
+		f[to[i]][0]=x; w[to[i]][0]=to[i];
 		build_tree(to[i]);
+		siz[x]+=siz[to[i]];
 	}
 }
 
-void build_size(int x,int from){
-	siz[x]=1;
-	for (int i=lnk[x];i;i=nxt[i]) if (to[i]!=from){
-		build_size(to[i],x);
-		siz[x]+=siz[to[i]];
-	}
+pair<int,int> get_lca(int x,int y){
+	pair<int,int> ret=make_pair(0,0);
+	if (deep[x]<deep[y]) swap(x,y);
+	for (int i=24;i>=0;i--) if (deep[f[x][i]] >= deep[y]) ret.second=w[x][i],x=f[x][i];
+	if (x==y) {ret.first=x;return ret;}
+	for (int i=24;i>=0;i--) if (f[x][i] != f[y][i]) x=f[x][i],y=f[y][i];
+	return make_pair(f[x][0],-1);
 }
 
 int qsm(int a,int b){
@@ -64,56 +70,22 @@ int qsm(int a,int b){
 	return ret;
 }
 
-void prebuild(){
-	const int N=100000;
-	fac[0]=1;
-	for (int i=1;i<=N;i++) fac[i]=fac[i-1]*i%tt;
-	for (int i=0;i<=N;i++) inv[i]=qsm(i,tt-2);
-}
-
-int C(int x,int y){
-	if (x<y) return 0;
-	return fac[x]*inv[y]%tt*inv[x-y]%tt;
-}
-
-int make_k1(int x,int y){
+int get_answer(int x,int y,int k){
 	if (deep[x]<deep[y]) swap(x,y);
-	int fx=x,fy=y,lst=0;
-	while (deep[fx]>deep[fy]) lst=fx,fx=fa[fx];
+	pair<int,int> ll=get_lca(x,y);
+	if (ll.second == -1) ll.second=f[y][0];
 
-	if (fx==fy) build_size(x,fa[x]),build_size(y,lst);
-	else build_size(x,fa[x]),build_size(y,fa[y]);
+	int ret1=qsm(siz[x],k);
+	for (int i=lnk[x];i;i=nxt[i]) if (to[i]!=f[x][0]) ret1=(ret1-qsm(siz[to[i]],k)+tt)%tt;
 
-	return siz[x]*siz[y]%tt;
-}
+	int ret2=qsm(((ll.second==f[y][0])?(siz[y]):(n-siz[ll.second])),k);
+	for (int i=lnk[y];i;i=nxt[i]) if (to[i]!=ll.second && to[i]!=f[y][0]) ret2=(ret2-qsm(siz[to[i]],k)+tt)%tt;
+	if (ll.second != f[y][0]) ret2=(ret2-qsm(n-siz[y],k)+tt)%tt;
 
-int make_k2(int x,int y){
-	if (deep[x]<deep[y]) swap(x,y);
-	int fx=x,fy=y,lst=0;
-	while (deep[fx]>deep[fy]) lst=fx,fx=fa[fx];
-
-	int fr;
-	if (fx==fy) build_size(x,fa[x]),build_size(y,lst),fr=lst;
-	else build_size(x,fa[x]),build_size(y,fa[y]),fr=fa[y];
-
-	int ret1=0,ret2=0;
-	for (int i=lnk[x];i;i=nxt[i]) if (to[i]!=fa[x]){
-		ret1=(ret1+siz[to[i]])%tt;
-		for (int j=nxt[i];j;j=nxt[j]) if (i!=j && to[j]!=fa[x])
-			ret1=(ret1+siz[to[i]]*siz[to[j]]%tt)%tt;
-	}
-
-	for (int i=lnk[y];i;i=nxt[i]) if (to[i]!=fr){
-		ret2=(ret2+siz[to[i]])%tt;
-		for (int j=nxt[i];j;j=nxt[j]) if (i!=j && to[j]!=fr)
-			ret2=(ret2+siz[to[i]]*siz[to[j]]%tt)%tt;
-	}
-
-	return (ret1*2%tt+1)*(ret2*2%tt+1)%tt;
+	return ret1*ret2%tt;
 }
 
 signed main(){
-	// prebuild();
 	T=read();
 	while (T--){
 		init();
@@ -122,11 +94,10 @@ signed main(){
 			int x=read(),y=read();
 			add_edge(x,y);add_edge(y,x);
 		}
-		deep[1]=1;build_tree(1);
+		deep[1]=1; build_tree(1);
 		while (q--){
 			int k=read(),x=read(),y=read();
-			if (k>2) printf("0\n"); else
-			printf("%lld\n",(k==1)?make_k1(x,y):make_k2(x,y));			
+			printf("%lld\n",get_answer(x,y,k));
 		}
 	}
 	return 0;
