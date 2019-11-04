@@ -14,14 +14,19 @@ inline int read(){
 	return ret*f;
 }
 
-const int maxn=1005;
+const int maxn=1e7+5;
 
 int T,n,k;
 char a[maxn];
 int f[maxn];
 
+int que[maxn];
+int head=1,tail=0;
+
 void init(){
-	memset(f,0,sizeof(f));
+	memset(f,0x3f,sizeof(f));
+	memset(que,0,sizeof(que));
+	head=1,tail=0;
 }
 
 signed main(){
@@ -31,14 +36,24 @@ signed main(){
 
 		n=read(),k=read();
 		scanf("%s",a+1);
-		if (k==0){printf("%lld\n",(n+1)*n/2);continue;}
 
-		memset(f,0x3f,sizeof(f)); f[0]=0;
-		for (int i=0;i<n;i++){
-			f[i+1]=min(f[i+1],f[i]+i+1);
-			for (int j=1;j<=k+1;j++) if (a[i+j]=='1')
-				f[min(n,i+j+k)]=min(f[min(n,i+j+k)],f[i]+i+j);
+		for (int i=-k;i<=n;i++){
+			if (i>0){
+				f[i]=f[i-1]+i;
+				while (head<=tail && i-que[head] > 2*k+1) head++;
+				if (head<=tail) f[i]=min(f[i],f[que[head]]+min(que[head]+k+1,n));
+			} else if (i==0) f[i]=0;
+
+			if (a[min(i+k+1,n)]=='1'){
+				int now=(i>=0?f[i]:0)+min(i+k+1,n);
+				while (head<=tail && now <= f[que[tail]]) tail--;
+				que[++tail]=i;
+			}
 		}
+
+		#ifdef DEBUG
+			for (int i=0;i<=n;i++) printf("f[%lld] = %lld\n",i,f[i]);
+		#endif
 
 		printf("%lld\n",f[n]);
 	}
