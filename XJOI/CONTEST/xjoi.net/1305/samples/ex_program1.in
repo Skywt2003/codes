@@ -1,0 +1,79 @@
+5
+17
+#include <stdio.h>
+unsigned long long __;
+void A() { __=__+1; }
+void X(){
+    A();
+    A();
+}
+void E(){
+    X();
+    A();
+}
+int main(){
+    __ = 0;
+    E();
+    X();
+    printf("%llu\n", __);
+}
+17
+#include <stdio.h>
+unsigned long long __;
+void A() { __=__+1; }
+void CP(){
+    A();
+    A();
+}
+void DA(){
+    DA();
+    CP();
+}
+int main(){
+    __ = 0;
+    CP();
+    CP();
+    printf("%llu\n", __);
+}
+13
+#include <stdio.h>
+unsigned long long __;
+void A() { __=__+1; }
+void EN(){
+    A();
+    A();
+    GAO();
+}
+int main(){
+    __ = 0;
+    EN();
+    printf("%llu\n", __);
+}
+12
+#include <stdio.h>
+unsigned long long __;
+void A() { __=__+1; }
+void BD(){
+    A();
+    BD();
+}
+int main(){
+    __ = 0;
+    BD();
+    printf("%llu\n", __);
+}
+14
+#include <stdio.h>
+unsigned long long __;
+void A() { __=__+1; }
+void CC(){
+}
+void CC(){
+    HAO();
+}
+int main(){
+    __ = 0;
+    A();
+    CC();
+    printf("%llu\n", __);
+}
