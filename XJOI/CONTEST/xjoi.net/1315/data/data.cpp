@@ -1,8 +1,11 @@
-#pragma GCC optimize(2)
+// 数据有点水……
+// 我这个暴力做法，如果树是链的话应该可以卡到 N^2 的……
+
+// #pragma GCC optimize(2)
 
 #include<bits/stdc++.h>
 
-#define int long long
+// #define int long long
 
 using namespace std;
 
@@ -16,7 +19,6 @@ inline int read(){
 const int maxn=100005,maxe=200005;
 
 int n,q;
-int a[maxn];
 
 int tot=0,lnk[maxn],nxt[maxe],to[maxe];
 int fa[maxn];
@@ -47,7 +49,10 @@ signed main(){
 	freopen("data.out","w",stdout);
 
 	n=read();
-	for (int i=1;i<=n;i++) a[i]=read(),nodes.push_back((node){i,a[i]});
+	for (int i=1;i<=n;i++){
+		int x=read();
+		nodes.push_back((node){i,x});
+	}
 	
 	for (int i=1;i<n;i++){
 		int x=read(),y=read();
