@@ -1,8 +1,4 @@
-#pragma GCC optimize(2)
-
 #include<bits/stdc++.h>
-
-//#define int long long
 
 using namespace std;
 
@@ -13,49 +9,57 @@ inline int read(){
 	return ret*f;
 }
 
-const int maxn=1e5+5;
+const int maxn=1e6+5;
 const int tt=1e9+7;
 
 int n,m;
-deque<int> que[maxn];
-int delta[maxn];
+list<int> que[maxn];
 
 signed main(){
 	freopen("problem2.in","r",stdin);
 	freopen("problem2.out","w",stdout);
-	n=read();m=read();
+
+	n=read(),m=read();
+	for (int i=1;i<=n;++i) que[i].push_back(0);
+
 	while (m--){
 		int opt=read();
 		if (opt==1){
 			int i=read(),x=read();
-			que[i].push_front((x-delta[i]+tt)%tt);
+			int y=que[i].front();
+			que[i].pop_front();
+			que[i].push_front((y-x+tt)%tt);
+			que[i].push_front(x);
 		} else if (opt==2){
 			int i=read();
-			printf("%d\n",(que[i].front()+delta[i])%tt);
-			que[i].pop_front();
+			int x=que[i].front(); que[i].pop_front();
+			int y=que[i].front(); que[i].pop_front();
+			que[i].push_front((x+y)%tt);
+			printf("%d\n",x);
 		} else if (opt==3){
 			int i=read(),x=read();
-			que[i].push_back((x-delta[i]+tt)%tt);
+			int y=tt-que[i].back(); que[i].pop_back();
+			que[i].push_back((x-y+tt)%tt);
+			que[i].push_back((-x+tt)%tt);
 		} else if (opt==4){
 			int i=read();
-			printf("%d\n",(que[i].back()+delta[i])%tt);
-			que[i].pop_back();
+			int x=que[i].back(); que[i].pop_back();
+			int y=que[i].back(); que[i].pop_back();
+			que[i].push_back((x+y)%tt);
+			printf("%d\n",tt-x);
 		} else if (opt==5){
-			int i=read(),d=read();
-			delta[i]=(delta[i]+d)%tt;
-		} else if (opt==6){
+			int i=read(),x=read();
+			int y1=que[i].front(); que[i].pop_front();
+			que[i].push_front((y1+x)%tt);
+			int y2=que[i].back(); que[i].pop_back();
+			que[i].push_back((y2-x+tt)%tt);
+		} else {
 			int i=read(),j=read();
-			if (que[i].size() >= que[j].size()){
-				while (!que[j].empty())
-					que[i].push_back((que[j].front()+delta[j]-delta[i]+tt)%tt),
-					que[j].pop_front();
-			} else {
-				while (!que[i].empty())
-					que[j].push_front((que[i].back()+delta[i]-delta[j]+tt)%tt),
-					que[i].pop_back();
-				que[i]=que[j]; delta[i]=delta[j];
-				que[j].clear(); delta[j]=0;
-			}
+			int x=que[i].back(); que[i].pop_back();
+			int y=que[j].front(); que[j].pop_front();
+			que[j].push_front((x+y)%tt);
+			que[i].splice(que[i].end(),que[j]);
+			que[j].push_back(0);
 		}
 	}
 	return 0;
