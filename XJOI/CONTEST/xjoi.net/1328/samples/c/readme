@@ -1,0 +1,13 @@
+直接编辑 program.cpp ，不要轻易更改 grader.cpp
+保存后 g++ grader.cpp -o x
+./x<#.in>#.out
+diff #.out #.ans -b
+本题只需要提交 program.cpp 里的内容即可。
+
+-----------------------------------
+
+如果您是不会使用终端的选手：
+
+直接编辑 program.cpp ，不要轻易更改 grader.cpp
+保存后使用 任意 IDE （如：dev-cpp ）一键编译 grader.cpp 即可测试。
+本题只需要提交 program.cpp 里的内容即可。
